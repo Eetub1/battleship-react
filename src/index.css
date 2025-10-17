@@ -1,0 +1,4 @@
+.cell:hover {
+    background-color: rgb(211, 211, 211);
+    cursor: pointer
+}

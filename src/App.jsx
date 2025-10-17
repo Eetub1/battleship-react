@@ -7,6 +7,11 @@ import Drawboard from './components/Drawboard'
 function App() {
   const boardObject = new Gameboard(10)
   const [boardArray, setBoardArray] = useState(boardObject.getBoard())
+  const [gamePhase, setGamePhase] = useState('')
+  //tyhjä merkkijono, niin ollaan nimien antamisvaiheessa
+  //laivan paikanvalinta vaihe
+  //peli käynnissä vaihe
+  //peli loppunut vaihe
 
   const ships = [
     new Ship('carrier'),
@@ -16,12 +21,12 @@ function App() {
     new Ship('destroyer'),
   ]
 
-                                        //row col ishorizontal ship
-  const wasSuccess = boardObject.placeShip(0, 0, true, ships[0])
-  console.log(wasSuccess)
+  //row col ishorizontal ship
+  //const wasSuccess = boardObject.placeShip(0, 0, true, ships[0])
+  //console.log(wasSuccess)
 
   return (
-    <div>
+    <div className='d-flex justify-content-center'>
       <Drawboard board={boardArray}/>
     </div>
   )
