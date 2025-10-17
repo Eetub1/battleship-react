@@ -1,6 +1,6 @@
 const DrawBoard = ({ board }) => {
     return (
-        <div>
+        <div className='border border-primary'>
             {board.map(row => {
                 return <div className='d-flex flex-row'>
                     {row.map(cell => {

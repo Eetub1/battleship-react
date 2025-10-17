@@ -2,30 +2,41 @@ class Ship {
     constructor(name) {
         this.name = name
         this.isSunk = false
-        this.shipLength = this.setShipLength()
+        this.marker = null
+        this.shipLength = null
         this.hitPoints = this.shipLength
+        this.setShipLengthAndMarker()
     }
 
     getShipLength() {
         return this.shipLength
     }
 
-    setShipLength() {
+    getShipMarker() {
+        return this.marker
+    }
+
+    setShipLengthAndMarker() {
         switch(this.name) {
             case 'carrier':
                 this.shipLength = 5
+                this.marker = 'c'
                 break
             case 'battleship':
                 this.shipLength = 4
+                this.marker = 'b'
                 break
             case 'cruiser':
                 this.shipLength = 3
+                this.marker = 'r'
                 break
             case 'submarine':
                 this.shipLength = 3
+                this.marker = 's'
                 break
             case 'destroyer':
                 this.shipLength = 2
+                this.marker = 'd'
                 break
             default:
                 this.shipLength = 5
