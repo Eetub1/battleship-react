@@ -1,16 +1,27 @@
 import { useState } from 'react'
 import Gameboard from './classes/gameboard'
+import Ship from './classes/ship'
+
 import Drawboard from './components/Drawboard'
 
 function App() {
-  const boardClass = new Gameboard(5)
+  const boardObject = new Gameboard(10)
+  const [boardArray, setBoardArray] = useState(boardObject.getBoard())
 
-  const boardArray = boardClass.getBoard()
-  console.log(boardArray)
+  const ships = [
+    new Ship('carrier'),
+    new Ship('battleship'),
+    new Ship('cruiser'),
+    new Ship('submarine'),
+    new Ship('destroyer'),
+  ]
+
+  //row col ishorizontal ship
+  const wasSuccess = boardObject.placeShip(0, 0, false, ships[0])
+  console.log(wasSuccess)
 
   return (
     <div>
-      <p>moi</p>
       <Drawboard board={boardArray}/>
     </div>
   )

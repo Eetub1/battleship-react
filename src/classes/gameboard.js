@@ -18,6 +18,23 @@ class Gameboard {
         return board
     }
 
+    placeShip(row, col, isHorizontal, board, ship) {
+        //remove these constants when this method works
+        const shipMarker = "jotaivitupaskaa"
+        const boardSize = 10
+        const shipLength = 5
+        if (row >= boardSize || col >= boardSize) return false
+
+        if (isHorizontal) {
+            if (col + shipLength > boardSize) return false
+            //tarkista onko tiellä mitään muita kuin tyhjiä merkkejä
+            //jos ei niin laita laiva taulukkoon
+        } else {
+            if (row + shipLength > boardSize) return false
+        }
+        return true
+    }
+
     getBoard() {
         return this.board
     }

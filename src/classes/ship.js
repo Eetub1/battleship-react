@@ -6,6 +6,10 @@ class Ship {
         this.hitPoints = this.shipLength
     }
 
+    getShipLength() {
+        return this.shipLength
+    }
+
     setShipLength() {
         switch(this.name) {
             case 'carrier':

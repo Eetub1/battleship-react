@@ -2,7 +2,7 @@ const DrawBoard = ({ board }) => {
     return (
         <div>
             {board.map(row => {
-                return <div>
+                return <div className='d-flex flex-row'>
                     {row.map(cell => {
                         return <div>{cell}</div>
                     })}
