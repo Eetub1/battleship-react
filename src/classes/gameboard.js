@@ -25,12 +25,8 @@ class Gameboard {
         return board
     }
 
-    placeShip(row, col, isHorizontal, ship) {
+    validatePlacement(row, col, isHorizontal, ship, shipLength) {
         const boardSize = this.getBoardSize()
-        const shipMarker = ship.getShipMarker()
-        const shipLength = ship.getShipLength()
-
-        if (row >= boardSize || col >= boardSize) return false
 
         if (isHorizontal) {
             if (col + shipLength > boardSize) return false
@@ -38,17 +34,28 @@ class Gameboard {
             for (let i = col; i < col + shipLength; i++) {
                 if (this.board[row][i] !== this.CONSTANTS.EMPTY) return false
             }
-
-            for (let i = col; i < col + shipLength; i++) {
-                this.board[row][i] = shipMarker
-            }
         } else {
             if (row + shipLength > boardSize) return false
 
             for (let i = row; i < row + shipLength; i++) {
                 if (this.board[i][col] !== this.CONSTANTS.EMPTY) return false
             }
+        }
+        return true
+    }
 
+    placeShip(row, col, isHorizontal, ship) {
+        const shipMarker = ship.getShipMarker()
+        const shipLength = ship.getShipLength()
+
+        if (!this.validatePlacement(row, col, isHorizontal, shipLength)) return false
+
+        //these two if branches could probably be connected with a little trickery
+        if (isHorizontal) {
+            for (let i = col; i < col + shipLength; i++) {
+                this.board[row][i] = shipMarker
+            }
+        } else {
             for (let i = row; i < row + shipLength; i++) {
                 this.board[i][col] = shipMarker
             }

@@ -9,7 +9,8 @@ const PlaceShipsBoard = ({ board, ships, setGamePhase}) => {
     const [isHorizontal, setIsHorizontal] = useState(true)
 
     //maybe this can be done more reasonably
-    const handleClick = event => {
+    const handleClick = (event, rowIndex, cellIndex) => {
+        console.log(rowIndex, cellIndex)
         const shipAmount = ships.length
         setCurrentShipIndex(currentShipIndex + 1)
         if (currentShipIndex >= shipAmount) setGamePhase('playPhase')//laita gamePhase eteenpäin
@@ -20,6 +21,10 @@ const PlaceShipsBoard = ({ board, ships, setGamePhase}) => {
     const handleMouseEnter = event => {
         //hoitaa ruudun vihreäksi värittämisen
         //ei tarvi kutsua validate placementia molemmissa funktioissa
+    }
+
+    const handleRandomPlacement = () => {
+
     }
 
     return (
@@ -34,7 +39,7 @@ const PlaceShipsBoard = ({ board, ships, setGamePhase}) => {
                         style={{width: '80vw', maxWidth: '600px'}} 
                         className='d-flex flex-row border border-primary'>
                         {row.map((cell, cellIndex) => {
-                            return <div onClick={handleClick} onMouseEnter={handleMouseEnter}
+                            return <div onClick={() => handleClick(event, rowIndex, cellIndex)} onMouseEnter={handleMouseEnter}
                                 key={cellIndex} 
                                 style={{flex: 1, aspectRatio: '1'}} 
                                 className='cell border border-primary d-flex align-items-center justify-content-center'>{cell}</div>
@@ -49,7 +54,7 @@ const PlaceShipsBoard = ({ board, ships, setGamePhase}) => {
                     : 'set to Horizontal'}
             </Button>
 
-            <Button>
+            <Button onClick={handleRandomPlacement}>
                 Random placement
             </Button>
         </div>
