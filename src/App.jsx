@@ -4,20 +4,17 @@ import Gameboard from './classes/gameboard'
 import Ship from './classes/ship'
 
 import DrawBoard from './components/DrawBoard'
+import PlaceShipsBoard from './components/PlaceShipsBoard'
 
 import { Form, Button } from 'react-bootstrap'
 
 function App() {
   const boardObject = new Gameboard(10)
   const [boardArray, setBoardArray] = useState(boardObject.getBoard())
-  const [gamePhase, setGamePhase] = useState('')
+  const [gamePhase, setGamePhase] = useState('beginPhase')
 
   const [p1name, setP1Name] = useState('')
   const [p2name, setP2Name] = useState('')
-  //tyhjä merkkijono, niin ollaan nimien antamisvaiheessa
-  //laivan paikanvalinta vaihe
-  //peli käynnissä vaihe
-  //peli loppunut vaihe
 
   const ships = [
     new Ship('carrier'),
@@ -40,13 +37,15 @@ function App() {
 
   return (
   <>
-    {gamePhase === 'placePhase' && (
-      <div className='d-flex justify-content-center'>
-        <DrawBoard board={boardArray} />
+    {p1name && (
+      <div>
+        <div>{p1name}</div>
+        <div>{p2name}</div>
+        <div>current phase: {gamePhase}</div>
       </div>
     )}
 
-    {gamePhase === '' && (
+    {gamePhase === 'beginPhase' && (
       <div>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="p1name">
@@ -64,6 +63,22 @@ function App() {
           </Button>
         </Form>
       </div>
+    )}
+
+    {gamePhase === 'placePhase' && (
+      <div className='d-flex justify-content-center'>
+        <PlaceShipsBoard board={boardArray} ships={ships} />
+      </div>
+    )}
+
+    {gamePhase === 'playPhase' && (
+      <div className='d-flex justify-content-center'>
+        <DrawBoard board={boardArray} />
+      </div>
+    )}
+
+    {gamePhase === 'endPhase' && (
+      <div>game ended</div>
     )}
   </>
   )
