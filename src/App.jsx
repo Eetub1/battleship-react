@@ -17,8 +17,7 @@ function App() {
   ]
 
   //row col ishorizontal ship
-  const wasSuccess = boardObject.placeShip(0, 0, false, ships[0])
-  console.log(wasSuccess)
+  //const wasSuccess = boardObject.placeShip(5, 0, false, ships[0])
 
   return (
     <div>

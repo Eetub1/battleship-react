@@ -5,6 +5,10 @@ class Gameboard {
         this.board = this.setBoard()
     }
 
+    CONSTANTS = {
+        EMPTY: 'o'
+    }
+
     setBoard() {
         const board = []
 
@@ -20,17 +24,27 @@ class Gameboard {
 
     placeShip(row, col, isHorizontal, board, ship) {
         //remove these constants when this method works
-        const shipMarker = "jotaivitupaskaa"
+        const shipMarker = "c"
         const boardSize = 10
         const shipLength = 5
         if (row >= boardSize || col >= boardSize) return false
 
         if (isHorizontal) {
             if (col + shipLength > boardSize) return false
-            //tarkista onko tiellä mitään muita kuin tyhjiä merkkejä
-            //jos ei niin laita laiva taulukkoon
+            for (let i = col; i < col + shipLength; i++) {
+                if (this.board[row][i] !== this.CONSTANTS.EMPTY) return false
+            }
+            for (let i = col; i < col + shipLength; i++) {
+                this.board[row][i] = shipMarker
+            }
         } else {
             if (row + shipLength > boardSize) return false
+            for (let i = row; i < row + shipLength; i++) {
+                if (this.board[i][col] !== this.CONSTANTS.EMPTY) return false
+            }
+            for (let i = row; i < row + shipLength; i++) {
+                this.board[i][col] = shipMarker
+            }
         }
         return true
     }
