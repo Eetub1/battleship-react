@@ -67,7 +67,7 @@ function App() {
 
     {gamePhase === 'placePhase' && (
       <div className='d-flex justify-content-center'>
-        <PlaceShipsBoard board={boardArray} ships={ships} />
+        <PlaceShipsBoard board={boardArray} ships={ships} setGamePhase={setGamePhase} />
       </div>
     )}
 

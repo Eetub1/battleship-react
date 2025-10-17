@@ -3,11 +3,17 @@ import { Button } from 'react-bootstrap'
 
 //kun tämä on valmis ja toimii, niin tämän voisi yhdistää tuon DrawBoard komponentin
 //kanssa ehkä samaksi? sillä loogisesti hyvin samanlainen
-const PlaceShipsBoard = ({ board, ships}) => {
+const PlaceShipsBoard = ({ board, ships, setGamePhase}) => {
+    const [currentShipIndex, setCurrentShipIndex] = useState(1)
     const [currentShip, setCurrentShip] = useState(ships[0])
     const [isHorizontal, setIsHorizontal] = useState(true)
 
+    //maybe this can be done more reasonably
     const handleClick = event => {
+        const shipAmount = ships.length
+        setCurrentShipIndex(currentShipIndex + 1)
+        if (currentShipIndex >= shipAmount) setGamePhase('playPhase')//laita gamePhase eteenpäin
+        else setCurrentShip(ships[currentShipIndex])
         //validatePlacement ja jos true niin laita laiva
     }
 
@@ -17,7 +23,7 @@ const PlaceShipsBoard = ({ board, ships}) => {
     }
 
     return (
-        <div>
+        <div className='d-flex flex-column align-items-center'>
             <div>{currentShip.name}</div>
             <div>{isHorizontal ? 'horizontal' : 'vertical'}</div>
 
@@ -41,6 +47,10 @@ const PlaceShipsBoard = ({ board, ships}) => {
                 onClick={() => {setIsHorizontal(!isHorizontal)}}>{isHorizontal 
                     ? 'set to Vertical' 
                     : 'set to Horizontal'}
+            </Button>
+
+            <Button>
+                Random placement
             </Button>
         </div>
     )
