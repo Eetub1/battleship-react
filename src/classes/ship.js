@@ -41,7 +41,7 @@ class Ship {
             default:
                 this.shipLength = 5
                 break
-            }
+        }
     }
 
     //jollain tavalla täytyy tuoda tieto laivasta johon osuttiin

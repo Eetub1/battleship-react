@@ -78,9 +78,8 @@ const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
                                 key={cellIndex} 
                                 style={styles} 
                                 className='cell border border-primary d-flex align-items-center justify-content-center'>
-                                {cell}
-                                </div>
-                            }
+                            </div>
+                        }
                         )}
                     </div>
                 })}
@@ -97,7 +96,7 @@ const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
             </Button>
 
             <Button style={{display: confirmPlacementVisible ? 'block' : 'none'}} 
-                    onClick={() => setGamePhase('playPhase')}>
+                onClick={() => setGamePhase('playPhase')}>
                 Confirm Placement?
             </Button>
         </div>

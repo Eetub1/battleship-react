@@ -72,7 +72,6 @@ class Gameboard {
                 let randomRow = Math.floor(Math.random() * this.size)
                 let randomCol = Math.floor(Math.random() * this.size)
                 let orientation = Math.random() > 0.5 ? true : false
-                console.log(randomRow, randomCol, orientation, ship)
                 if (this.placeShip(randomRow, randomCol, orientation, ship)) break
             }
         }
