@@ -44,9 +44,13 @@ class Ship {
         }
     }
 
-    //jollain tavalla täytyy tuoda tieto laivasta johon osuttiin
-    hitShip() {
-
+    markHitOnShip() {
+        if (this.hitPoints === 0) return
+        this.hitPoints -= 1
+        if (this.hitPoints == 0) {
+            this.isSunk = true
+            console.log(`${this.name} has been sunk`, this)
+        }
     }
 }
 

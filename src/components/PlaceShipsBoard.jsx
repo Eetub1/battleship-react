@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 
-const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
+const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
     const [currentShipIndex, setCurrentShipIndex] = useState(1)
     const [currentShip, setCurrentShip] = useState(ships[0])
     const [isHorizontal, setIsHorizontal] = useState(true)
@@ -10,11 +10,11 @@ const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
     const [confirmPlacementVisible, setConfirmPlacementVisible] = useState(false)
 
     const shipAmount = ships.length
-    const board = boardObject.getBoard()
+    const board = playerBoardObject.getBoard()
     const shipLength = currentShip.getShipLength()
 
     const handleClick = (rowIndex, cellIndex) => {
-        if (isValidPlacement) boardObject.placeShip(rowIndex, cellIndex, isHorizontal, currentShip)
+        if (isValidPlacement) playerBoardObject.placeShip(rowIndex, cellIndex, isHorizontal, currentShip)
         else return
 
         setCurrentShipIndex(currentShipIndex + 1)
@@ -23,7 +23,7 @@ const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
     }
 
     const handleMouseEnter = (rowIndex, cellIndex) => {
-        setIsValidPlacement(boardObject.validatePlacement(rowIndex, cellIndex, isHorizontal, shipLength))
+        setIsValidPlacement(playerBoardObject.validatePlacement(rowIndex, cellIndex, isHorizontal, shipLength))
         setHoverCells([])
         const cells = []
         if (isHorizontal) {
@@ -39,7 +39,7 @@ const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
     }
 
     const handleRandomPlacement = () => {
-        boardObject.placeShipsRandomly(ships)
+        playerBoardObject.placeShipsRandomly(ships)
         //this row forces react to update the UI
         //shamelessly copied this from ChatGPT
         setHoverCells([...hoverCells])

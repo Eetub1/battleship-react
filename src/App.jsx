@@ -9,7 +9,7 @@ import NameForm from './components/NameForm'
 
 
 function App() {
-    const [boardObject] = useState(new Gameboard(10))
+    const [playerBoardObject] = useState(new Gameboard(10))
     const [gamePhase, setGamePhase] = useState('beginPhase')
 
     const [playername, setPlayerName] = useState('')
@@ -22,8 +22,10 @@ function App() {
         new Ship('submarine'),
         new Ship('destroyer'),
     ]
+    playerBoardObject.ships = ships
 
     const computerBoardObject = new Gameboard(10)
+    computerBoardObject.ships = ships
     computerBoardObject.placeShipsRandomly(ships)
 
     return (
@@ -38,20 +40,20 @@ function App() {
             {gamePhase === 'beginPhase' && (
                 <div>
                     <NameForm 
-                        setPlayerName={setPlayerName} 
+                        setPlayerName={setPlayerName}
                         setGamePhase={setGamePhase}/>
                 </div>
             )}
 
             {gamePhase === 'placePhase' && (
                 <div className='d-flex justify-content-center'>
-                    <PlaceShipsBoard boardObject={boardObject} ships={ships} setGamePhase={setGamePhase} />
+                    <PlaceShipsBoard playerBoardObject={playerBoardObject} ships={ships} setGamePhase={setGamePhase} />
                 </div>
             )}
 
             {gamePhase === 'playPhase' && (
                 <div className='d-flex justify-content-center gap-5'>
-                    <HandlePlayPhase boardObject={boardObject} computerObject={computerBoardObject} setGamePhase={setGamePhase}/>
+                    <HandlePlayPhase playerBoardObject={playerBoardObject} computerObject={computerBoardObject} setGamePhase={setGamePhase}/>
                 </div>
             )}
 

@@ -1,5 +1,5 @@
-const DrawBoard = ({ boardObject, isComputerBoard }) => {
-    const board = boardObject.getBoard()
+const DrawPlayerBoard = ({ playerBoardObject }) => {
+    const board = playerBoardObject.getBoard()
 
     return (
         <div>
@@ -11,12 +11,9 @@ const DrawBoard = ({ boardObject, isComputerBoard }) => {
                         className='d-flex flex-row border border-primary'>
                         {row.map((cell, cellIndex) => {
                             const styles = {flex: 1, aspectRatio: '1'}
-
                             //mystery constant variable fix later!
-                            if (!isComputerBoard) {
-                                if (board[rowIndex][cellIndex] !== 'o') styles.backgroundColor = 'blue'
-                            }
-
+                            if (board[rowIndex][cellIndex] !== 'o') styles.backgroundColor = 'blue'
+                            
                             return <div 
                                 key={cellIndex} 
                                 style={styles} 
@@ -30,4 +27,4 @@ const DrawBoard = ({ boardObject, isComputerBoard }) => {
     )
 } 
 
-export default DrawBoard
+export default DrawPlayerBoard

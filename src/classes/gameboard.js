@@ -2,14 +2,21 @@ class Gameboard {
     constructor(size=10) {
         this.size = size
         this.board = this.setBoard()
+        this.ships = []
     }
 
     CONSTANTS = {
-        EMPTY: 'o'
+        EMPTY: 'o',
+        HIT: 'x',
+        MISS: 'm'
     }
 
     getBoardSize() {
         return this.size
+    }
+
+    getBoard() {
+        return this.board
     }
 
     setBoard() {
@@ -77,8 +84,44 @@ class Gameboard {
         }
     }
 
-    getBoard() {
-        return this.board
+    calculateRandomResponse() {
+        while (true) {
+            let randomRow = Math.floor(Math.random() * this.size)
+            let randomCol = Math.floor(Math.random() * this.size)
+            if (this.validateHit(randomRow, randomCol).wasValid) break
+        }
+    }
+
+    markHit(row, col) {
+        console.log(this.ships)
+        console.log('Tälläsee osuttiin: ', this.board[row][col])
+        const hitShip = this.ships.find(ship => ship.marker === this.board[row][col])
+        console.log('Osuttu laivaolio: ', hitShip);
+        hitShip.markHitOnShip()
+    }
+
+    //validates if the strike on a given square is a hit
+    //then it marks the square as either hit or missed
+    validateHit(row, col) {
+        const hitInfo = {
+            wasValid: true,
+            wasHit: false
+        }
+
+        //jos ruudussa on hit tai miss, niin sitä ei voi painaa
+        if (this.board[row][col] === this.CONSTANTS.HIT || this.board[row][col] === this.CONSTANTS.MISS) {
+            hitInfo.wasValid = false
+            return hitInfo
+        } else if (this.board[row][col] === this.CONSTANTS.EMPTY) {
+            this.board[row][col] = this.CONSTANTS.MISS
+            console.log('Ammuit huti, lol xdddd!')
+        } else {
+            hitInfo.wasHit = true
+            this.markHit(row, col)
+            this.board[row][col] = this.CONSTANTS.HIT
+            console.log('Tuo oli osuma, hyvää työtä')
+        }
+        return hitInfo
     }
 }
 
