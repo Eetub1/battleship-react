@@ -9,8 +9,7 @@ import PlaceShipsBoard from './components/PlaceShipsBoard'
 import { Form, Button } from 'react-bootstrap'
 
 function App() {
-  const boardObject = new Gameboard(10)
-  const [boardArray, setBoardArray] = useState(boardObject.getBoard())
+  const [boardObject] = useState(new Gameboard(10))
   const [gamePhase, setGamePhase] = useState('placePhase')
 
   const [p1name, setP1Name] = useState('')
@@ -76,7 +75,7 @@ function App() {
 
     {gamePhase === 'playPhase' && (
       <div className='d-flex justify-content-center'>
-        <DrawBoard board={boardArray} />
+        <DrawBoard boardObject={boardObject} />
       </div>
     )}
 

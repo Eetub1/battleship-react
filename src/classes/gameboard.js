@@ -25,7 +25,7 @@ class Gameboard {
         return board
     }
 
-    validatePlacement(row, col, isHorizontal, ship, shipLength) {
+    validatePlacement(row, col, isHorizontal, shipLength) {
         const boardSize = this.getBoardSize()
 
         if (isHorizontal) {
@@ -61,6 +61,21 @@ class Gameboard {
             }
         }
         return true
+    }
+
+    placeShipsRandomly(ships) {
+        //clearing the board of all previously placed ships
+        this.board = this.setBoard()
+
+        for (const ship of ships) {
+            while (true) {
+                let randomRow = Math.floor(Math.random() * this.size)
+                let randomCol = Math.floor(Math.random() * this.size)
+                let orientation = Math.random() > 0.5 ? true : false
+                console.log(randomRow, randomCol, orientation, ship)
+                if (this.placeShip(randomRow, randomCol, orientation, ship)) break
+            }
+        }
     }
 
     getBoard() {

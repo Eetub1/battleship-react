@@ -1,4 +1,6 @@
-const DrawBoard = ({ board }) => {
+const DrawBoard = ({ boardObject }) => {
+    const board = boardObject.getBoard()
+
     return (
         <div className=' d-flex flex-column align-items-center border border-primary'>
             {board.map((row, rowIndex) => {
