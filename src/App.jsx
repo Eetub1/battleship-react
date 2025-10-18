@@ -11,7 +11,7 @@ import { Form, Button } from 'react-bootstrap'
 function App() {
   const boardObject = new Gameboard(10)
   const [boardArray, setBoardArray] = useState(boardObject.getBoard())
-  const [gamePhase, setGamePhase] = useState('beginPhase')
+  const [gamePhase, setGamePhase] = useState('placePhase')
 
   const [p1name, setP1Name] = useState('')
   const [p2name, setP2Name] = useState('')
