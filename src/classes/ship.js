@@ -4,8 +4,8 @@ class Ship {
         this.isSunk = false
         this.marker = null
         this.shipLength = null
-        this.hitPoints = this.shipLength
         this.setShipLengthAndMarker()
+        this.hitPoints = this.shipLength
     }
 
     getShipLength() {

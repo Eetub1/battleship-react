@@ -40,7 +40,6 @@ const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
 
     const handleRandomPlacement = () => {
         boardObject.placeShipsRandomly(ships)
-
         //this row forces react to update the UI
         //shamelessly copied this from ChatGPT
         setHoverCells([...hoverCells])
@@ -69,6 +68,9 @@ const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
                                 else styles.backgroundColor = 'red'
                             }
 
+                            //mystery constant variable fix later!
+                            if (board[rowIndex][cellIndex] !== 'o') styles.backgroundColor = 'blue'
+
                             return <div 
                                 onClick={() => handleClick(rowIndex, cellIndex)} 
                                 onMouseEnter={() => {handleMouseEnter(rowIndex, cellIndex)}}
@@ -94,7 +96,8 @@ const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
                 Random placement
             </Button>
 
-            <Button style={{display: confirmPlacementVisible ? 'block' : 'none'}} onClick={() => setGamePhase('playPhase')}>
+            <Button style={{display: confirmPlacementVisible ? 'block' : 'none'}} 
+                    onClick={() => setGamePhase('playPhase')}>
                 Confirm Placement?
             </Button>
         </div>
