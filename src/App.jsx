@@ -11,7 +11,7 @@ import { Form, Button } from 'react-bootstrap'
 function App() {
   const boardObject = new Gameboard(10)
   const [boardArray, setBoardArray] = useState(boardObject.getBoard())
-  const [gamePhase, setGamePhase] = useState('placePhase')
+  const [gamePhase, setGamePhase] = useState('beginPhase')
 
   const [p1name, setP1Name] = useState('')
   const [p2name, setP2Name] = useState('')
@@ -25,11 +25,11 @@ function App() {
   ]
 
   //row col ishorizontal ship
-  boardObject.placeShip(0, 5, true, ships[0])
+  /*boardObject.placeShip(0, 5, true, ships[0])
   boardObject.placeShip(1, 5, true, ships[1])
   boardObject.placeShip(5, 4, false, ships[2])
   boardObject.placeShip(6, 9, false, ships[3])
-  boardObject.placeShip(9, 0, true, ships[4])
+  boardObject.placeShip(9, 0, true, ships[4])*/
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -70,7 +70,7 @@ function App() {
 
     {gamePhase === 'placePhase' && (
       <div className='d-flex justify-content-center'>
-        <PlaceShipsBoard board={boardArray} ships={ships} setGamePhase={setGamePhase} />
+        <PlaceShipsBoard boardObject={boardObject} ships={ships} setGamePhase={setGamePhase} />
       </div>
     )}
 

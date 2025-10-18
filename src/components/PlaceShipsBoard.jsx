@@ -1,17 +1,27 @@
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 
+
 //kun tämä on valmis ja toimii, niin tämän voisi yhdistää tuon DrawBoard komponentin
 //kanssa ehkä samaksi? sillä loogisesti hyvin samanlainen
-const PlaceShipsBoard = ({ board, ships, setGamePhase}) => {
+const PlaceShipsBoard = ({ boardObject, ships, setGamePhase}) => {
     const [currentShipIndex, setCurrentShipIndex] = useState(1)
     const [currentShip, setCurrentShip] = useState(ships[0])
     const [isHorizontal, setIsHorizontal] = useState(true)
+    const shipAmount = ships.length
+    const board = boardObject.getBoard()
 
     //maybe this can be done more reasonably
     const handleClick = (event, rowIndex, cellIndex) => {
         console.log(rowIndex, cellIndex)
-        const shipAmount = ships.length
+        
+        const wasSuccess = boardObject.validatePlacement(rowIndex, cellIndex, isHorizontal, currentShip, currentShip.getShipLength())
+        if (wasSuccess) {
+            boardObject.placeShip(rowIndex, cellIndex, isHorizontal, currentShip)
+        } else {
+            return
+        }
+
         setCurrentShipIndex(currentShipIndex + 1)
         if (currentShipIndex >= shipAmount) setGamePhase('playPhase')//laita gamePhase eteenpäin
         else setCurrentShip(ships[currentShipIndex])
