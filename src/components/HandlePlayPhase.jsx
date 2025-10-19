@@ -1,9 +1,9 @@
 import DrawBoard from './DrawBoard'
 import { useState } from 'react'
 
-const HandlePlayPhase = ({ playerBoardObject, computerObject }) => {
+const HandlePlayPhase = ({ playerBoardObject, computerObject, playerName }) => {
     const [message, setMessage] = useState('')
-    const [hitMessage, setHitMessage] = useState('m')
+    const [hitMessage, setHitMessage] = useState('')
     const [isComputerTurn, setIsComputerTurn] = useState(false)
     const [isGameOver, setIsGameOver] = useState(false)
 
@@ -21,7 +21,7 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject }) => {
         const hitInfo = computerObject.validateHit(rowIndex, cellIndex)
         setHitMessage(hitInfo.message)
         setTimeout(() => {
-            setHitMessage('m')
+            setHitMessage('')
         }, 750)
         if (!hitInfo.wasValid) return
 
@@ -29,18 +29,21 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject }) => {
         setMessage('Calculating response...')
         setTimeout(() => {
             playerBoardObject.calculateRandomResponse()
-            setMessage('Your turn, human...')
+            setMessage(`Your turn, ${playerName}...`)
             setIsComputerTurn(false)
             checkIfGameOver()
             //handle starting a new game here
-        }, (Math.random() + 1) * 100) //put this to 1000 when ready
+        }, (Math.random() + 1) * 1000) //put this to 1000 when ready
     }
 
     return (
-        <div className='d-flex flex-column justify-content-center gap-5'>
-            <div className='d-flex justify-content-center'>{hitMessage}</div>
-            <div className='d-flex justify-content-center'>{message}</div>
-            <div className='d-flex justify-content-center gap-5'>
+        <div className='d-flex flex-column justify-content-center'>
+            <div style={{minHeight: '5rem'}} className='d-flex flex-column align-items-center text-white mt-4'>
+                <h4>{message}</h4>
+                <h4>{hitMessage}</h4> 
+            </div>
+            <div className='d-flex justify-content-center'></div>
+            <div className='d-flex justify-content-center gap-5 mt-2'>
                 <DrawBoard boardObject={playerBoardObject} isComputerBoard={false}/>
                 <DrawBoard boardObject={computerObject} isComputerBoard={true} handleComputerBoardClick={handleComputerBoardClick}/>
             </div>

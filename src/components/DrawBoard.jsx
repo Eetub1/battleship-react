@@ -12,7 +12,7 @@ const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => 
                     return <div
                         key={rowIndex} 
                         style={{width: '40vw', maxWidth: '450px'}} 
-                        className='d-flex flex-row border border-primary'>
+                        className='d-flex flex-row'>
                         {row.map((cell, cellIndex) => {
                             const styles = {flex: 1, aspectRatio: '1'}
                             
@@ -21,13 +21,13 @@ const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => 
                                 case 'o':
                                     break
                                 case 'm':
-                                    styles.backgroundColor = 'red'
+                                    styles.backgroundColor = 'rgba(184, 38, 38, 1)'
                                     break
                                 case 'x':
-                                    styles.backgroundColor = 'green'
+                                    styles.backgroundColor = 'rgba(8, 124, 47, 1)'
                                     break
                                 default:
-                                    styles.backgroundColor = 'blue'
+                                    styles.backgroundColor = 'white'
                                     break
                             }
 
@@ -35,7 +35,7 @@ const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => 
                                 onClick={isComputerBoard ? () => {handleComputerBoardClick(rowIndex, cellIndex)} : noop}
                                 key={cellIndex} 
                                 style={styles} 
-                                className='cell border border-primary d-flex align-items-center justify-content-center'>
+                                className='cell border border-gray d-flex align-items-center justify-content-center'>
                             </div>
                         })}
                     </div>

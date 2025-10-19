@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Gameboard from './classes/gameboard'
 import Ship from './classes/ship'
 
-import PlaceShipsBoard from './components/PlaceShipsBoard'
+import HandlePlacePhase from './components/handlePlacePhase'
 import HandlePlayPhase from './components/HandlePlayPhase'
 import NameForm from './components/NameForm'
 import Footer from './components/Footer'
@@ -31,12 +31,6 @@ function App() {
 
     return (
         <>
-            {playername && (
-                <div className='d-flex flex-column align-items-center border border-warning'>
-                    <div>Player: {playername}</div>
-                </div>
-            )}
-
             {gamePhase === 'beginPhase' && (
                 <>
                     <NameForm 
@@ -46,14 +40,14 @@ function App() {
             )}
 
             {gamePhase === 'placePhase' && (
-                <div className='d-flex justify-content-center'>
-                    <PlaceShipsBoard playerBoardObject={playerBoardObject} ships={ships} setGamePhase={setGamePhase} />
-                </div>
+                <>
+                    <HandlePlacePhase playerBoardObject={playerBoardObject} ships={ships} setGamePhase={setGamePhase} />
+                </>
             )}
 
             {gamePhase === 'playPhase' && (
                 <>
-                    <HandlePlayPhase playerBoardObject={playerBoardObject} computerObject={computerBoardObject}/>
+                    <HandlePlayPhase playerBoardObject={playerBoardObject} computerObject={computerBoardObject} playerName={playername}/>
                 </>
             )}
 
