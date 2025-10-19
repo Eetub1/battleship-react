@@ -7,7 +7,7 @@ const DrawPlayerBoard = ({ playerBoardObject }) => {
                 {board.map((row, rowIndex) => {
                     return <div
                         key={rowIndex} 
-                        style={{width: '80vw', maxWidth: '600px'}} 
+                        style={{width: '40vw', maxWidth: '450px'}} 
                         className='d-flex flex-row border border-primary'>
                         {row.map((cell, cellIndex) => {
                             const styles = {flex: 1, aspectRatio: '1'}

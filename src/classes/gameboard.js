@@ -105,21 +105,22 @@ class Gameboard {
     validateHit(row, col) {
         const hitInfo = {
             wasValid: true,
-            wasHit: false
+            wasHit: false,
+            message: 'You missed!'
         }
 
         //jos ruudussa on hit tai miss, niin sitä ei voi painaa
         if (this.board[row][col] === this.CONSTANTS.HIT || this.board[row][col] === this.CONSTANTS.MISS) {
             hitInfo.wasValid = false
+            hitInfo.message = 'Not a valid square!'
             return hitInfo
         } else if (this.board[row][col] === this.CONSTANTS.EMPTY) {
             this.board[row][col] = this.CONSTANTS.MISS
-            console.log('Ammuit huti, lol xdddd!')
         } else {
             hitInfo.wasHit = true
             this.markHit(row, col)
             this.board[row][col] = this.CONSTANTS.HIT
-            console.log('Tuo oli osuma, hyvää työtä')
+            hitInfo.message = 'Nice hit!'
         }
         return hitInfo
     }

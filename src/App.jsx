@@ -6,6 +6,7 @@ import Ship from './classes/ship'
 import PlaceShipsBoard from './components/PlaceShipsBoard'
 import HandlePlayPhase from './components/HandlePlayPhase'
 import NameForm from './components/NameForm'
+import Footer from './components/Footer'
 
 
 function App() {
@@ -31,7 +32,7 @@ function App() {
     return (
         <>
             {playername && (
-                <div>
+                <div className='d-flex flex-column align-items-center border border-warning'>
                     <div>{playername}</div>
                     <div>current phase: {gamePhase}</div>
                 </div>
@@ -52,14 +53,16 @@ function App() {
             )}
 
             {gamePhase === 'playPhase' && (
-                <div className='d-flex justify-content-center gap-5'>
+                <>
                     <HandlePlayPhase playerBoardObject={playerBoardObject} computerObject={computerBoardObject} setGamePhase={setGamePhase}/>
-                </div>
+                </>
             )}
 
             {gamePhase === 'endPhase' && (
                 <div>game ended</div>
             )}
+
+            <Footer/>
         </>
     )
 }
