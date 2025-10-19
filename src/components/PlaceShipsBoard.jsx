@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 
+//TODO refaktoroi tämän komponentin koodia
 const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
     const [currentShipIndex, setCurrentShipIndex] = useState(1)
     const [currentShip, setCurrentShip] = useState(ships[0])
@@ -69,7 +70,7 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
                     return <div
                         key={rowIndex} 
                         style={{width: '80vw', maxWidth: '600px'}} 
-                        className='d-flex flex-row border border-primary'>
+                        className='d-flex flex-row border border-white'>
                         {row.map((cell, cellIndex) => {
                             const styles = {
                                 flex: 1, 
@@ -82,7 +83,7 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
                             }
 
                             //mystery constant variable fix later!
-                            if (board[rowIndex][cellIndex] !== 'o') styles.backgroundColor = 'blue'
+                            if (board[rowIndex][cellIndex] !== 'o') styles.backgroundColor = 'white'
 
                             return <div 
                                 onClick={() => handleClick(rowIndex, cellIndex)} 
@@ -90,7 +91,7 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
                                 onMouseLeave={() => setHoverCells([])}
                                 key={cellIndex} 
                                 style={styles} 
-                                className='cell border border-primary d-flex align-items-center justify-content-center'>
+                                className='cell border border-white d-flex align-items-center justify-content-center'>
                             </div>
                         }
                         )}

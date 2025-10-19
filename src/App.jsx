@@ -38,11 +38,11 @@ function App() {
             )}
 
             {gamePhase === 'beginPhase' && (
-                <div>
+                <>
                     <NameForm 
                         setPlayerName={setPlayerName}
                         setGamePhase={setGamePhase}/>
-                </div>
+                </>
             )}
 
             {gamePhase === 'placePhase' && (

@@ -1,4 +1,4 @@
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, Card } from 'react-bootstrap'
 
 const NameForm = ({ setPlayerName, setGamePhase }) => {
     const handleSubmit = event => {
@@ -8,15 +8,18 @@ const NameForm = ({ setPlayerName, setGamePhase }) => {
     }
 
     return (
-        <Form className='d-flex flex-column align-items-center mt-5' onSubmit={handleSubmit}>
-            <Form.Group className="d-flex flex-column align-items-center mb-3" controlId="p1name">
-                <Form.Control style={{maxWidth: '20rem'}} name="p1name" type="text" placeholder="Enter your name" />
-            </Form.Group>
+        <div style={{marginTop: '20rem'}}>
+            <Form className='d-flex flex-column align-items-center' onSubmit={handleSubmit}>
+                <h2>Welcome to Battleship</h2>
+                <Form.Group className="d-flex flex-column align-items-center mb-3" controlId="p1name">
+                    <Form.Control style={{maxWidth: '20rem'}} name="p1name" type="text" placeholder="Enter your name" />
+                </Form.Group>
 
-            <Button style={{maxWidth: '5rem'}} variant="primary" type="submit">
-            Submit
-            </Button>
-        </Form>
+                <Button style={{maxWidth: '5rem'}} variant="primary" type="submit">
+                Submit
+                </Button>
+            </Form>
+        </div>
     )
 }
 
