@@ -12,7 +12,20 @@ const DrawPlayerBoard = ({ playerBoardObject }) => {
                         {row.map((cell, cellIndex) => {
                             const styles = {flex: 1, aspectRatio: '1'}
                             //mystery constant variable fix later!
-                            if (board[rowIndex][cellIndex] !== 'o') styles.backgroundColor = 'blue'
+                            //mystery constants!
+                            switch (board[rowIndex][cellIndex]) {
+                                case 'o':
+                                    break
+                                case 'm':
+                                    styles.backgroundColor = 'red'
+                                    break
+                                case 'x':
+                                    styles.backgroundColor = 'green'
+                                    break
+                                default:
+                                    styles.backgroundColor = 'blue'
+                                    break
+                            }
                             
                             return <div 
                                 key={cellIndex} 
