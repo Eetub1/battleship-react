@@ -6,8 +6,17 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, setGamePhase }) =>
     const [message, setMessage] = useState('')
     const [hitMessage, setHitMessage] = useState('m')
     const [isComputerTurn, setIsComputerTurn] = useState(false)
+    const [isGameOver, setIsGameOver] = useState(false)
+
+    const checkIfGameOver = () => {
+        if (playerBoardObject.checkIfAllShipsSunk() || computerObject.checkIfAllShipsSunk()) {
+            setIsGameOver(true)
+            setMessage('The game is now over')
+        }
+    }
 
     const handleComputerBoardClick = (rowIndex, cellIndex) => {
+        if (isGameOver) return
         if (isComputerTurn) return
 
         const hitInfo = computerObject.validateHit(rowIndex, cellIndex)
@@ -23,7 +32,11 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, setGamePhase }) =>
             playerBoardObject.calculateRandomResponse()
             setMessage('Your turn, human...')
             setIsComputerTurn(false)
-        }, (Math.random() + 1) * 1000)
+            checkIfGameOver()
+        }, (Math.random() + 1) * 100) //pistä tää tonniin ku deployaat
+
+        
+        //handle starting a new game here
     }
 
     return (

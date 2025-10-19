@@ -32,6 +32,13 @@ class Gameboard {
         return board
     }
 
+    checkIfAllShipsSunk() {
+        for (const ship of this.ships) {
+            if (!ship.isSunk) return false 
+        }
+        return true
+    }
+
     validatePlacement(row, col, isHorizontal, shipLength) {
         const boardSize = this.getBoardSize()
 
