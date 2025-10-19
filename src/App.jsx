@@ -33,8 +33,7 @@ function App() {
         <>
             {playername && (
                 <div className='d-flex flex-column align-items-center border border-warning'>
-                    <div>{playername}</div>
-                    <div>current phase: {gamePhase}</div>
+                    <div>Player: {playername}</div>
                 </div>
             )}
 

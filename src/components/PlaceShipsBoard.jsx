@@ -9,11 +9,17 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
     const [isValidPlacement, setIsValidPlacement] = useState(null)
     const [confirmPlacementVisible, setConfirmPlacementVisible] = useState(false)
 
+    //this variable tracks if random placement button has been pressed
+    //so that you cant manually place ships if there are alreay random ships on board
+    const [isShipRandomPlacement, setIsShipRandomPlacement] = useState(false) 
+
     const shipAmount = ships.length
     const board = playerBoardObject.getBoard()
     const shipLength = currentShip.getShipLength()
 
     const handleClick = (rowIndex, cellIndex) => {
+        if (isShipRandomPlacement) return
+
         if (isValidPlacement) playerBoardObject.placeShip(rowIndex, cellIndex, isHorizontal, currentShip)
         else return
 
@@ -23,6 +29,7 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
     }
 
     const handleMouseEnter = (rowIndex, cellIndex) => {
+        if (isShipRandomPlacement) return
         setIsValidPlacement(playerBoardObject.validatePlacement(rowIndex, cellIndex, isHorizontal, shipLength))
         setHoverCells([])
         const cells = []
@@ -39,6 +46,7 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
     }
 
     const handleRandomPlacement = () => {
+        setIsShipRandomPlacement(true)
         playerBoardObject.placeShipsRandomly(ships)
 
         //this row forces react to update the UI, doesnt actually do anything useful
@@ -46,10 +54,15 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
         setConfirmPlacementVisible(true)
     }
 
+    const placeShipsManually = () => {
+        setIsShipRandomPlacement(false)
+        setConfirmPlacementVisible(false)
+        //TODO: need to clear the board of ships here
+    }
+
     return (
         <div className='d-flex flex-column align-items-center'>
-            <div>Place your {currentShip.name}</div>
-            <div>Current ship orientation: {isHorizontal ? 'horizontal' : 'vertical'}</div>
+            <h2>Place your {currentShip.name}</h2>
 
             <div className='d-flex flex-column align-items-center border border-primary'>
                 {board.map((row, rowIndex) => {
@@ -84,21 +97,28 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
                     </div>
                 })}
             </div>
+            
+            <div className='d-flex flex-column '>
+                <Button 
+                    onClick={() => {setIsHorizontal(!isHorizontal)}}>{isHorizontal 
+                        ? 'Set To Vertical' 
+                        : 'Set To Horizontal'}
+                </Button>
 
-            <Button 
-                onClick={() => {setIsHorizontal(!isHorizontal)}}>{isHorizontal 
-                    ? 'set to Vertical' 
-                    : 'set to Horizontal'}
-            </Button>
+                <Button onClick={handleRandomPlacement}>
+                    Random placement
+                </Button>
 
-            <Button onClick={handleRandomPlacement}>
-                Random placement
-            </Button>
+                <Button style={{display: confirmPlacementVisible ? 'block' : 'none'}} 
+                    onClick={() => setGamePhase('playPhase')}>
+                    Confirm Placement?
+                </Button>
 
-            <Button style={{display: confirmPlacementVisible ? 'block' : 'none'}} 
-                onClick={() => setGamePhase('playPhase')}>
-                Confirm Placement?
-            </Button>
+                <Button style={{display: confirmPlacementVisible ? 'block' : 'none'}}
+                    onClick={placeShipsManually}>
+                    Place manually?
+                </Button>
+            </div>
         </div>
     )
 }
