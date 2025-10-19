@@ -40,8 +40,8 @@ const PlaceShipsBoard = ({ playerBoardObject, ships, setGamePhase}) => {
 
     const handleRandomPlacement = () => {
         playerBoardObject.placeShipsRandomly(ships)
-        //this row forces react to update the UI
-        //shamelessly copied this from ChatGPT
+
+        //this row forces react to update the UI, doesnt actually do anything useful
         setHoverCells([...hoverCells])
         setConfirmPlacementVisible(true)
     }

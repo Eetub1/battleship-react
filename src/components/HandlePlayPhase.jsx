@@ -1,6 +1,5 @@
-import DrawPlayerBoard from './DrawPlayerBoard'
-import DrawComputerBoard from './DrawComputerBoard'
-import Gameboard from '../classes/gameboard'
+
+import DrawBoard from './DrawBoard'
 import { useState } from 'react'
 
 const HandlePlayPhase = ({ playerBoardObject, computerObject, setGamePhase }) => {
@@ -32,8 +31,8 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, setGamePhase }) =>
             <div className='d-flex justify-content-center'>{hitMessage}</div>
             <div className='d-flex justify-content-center'>{message}</div>
             <div className='d-flex justify-content-center gap-5'>
-                <DrawPlayerBoard playerBoardObject={playerBoardObject} />
-                <DrawComputerBoard boardObject={computerObject} handleComputerBoardClick={handleComputerBoardClick}/>
+                <DrawBoard boardObject={playerBoardObject} isComputerBoard={false}/>
+                <DrawBoard boardObject={computerObject} isComputerBoard={true} handleComputerBoardClick={handleComputerBoardClick}/>
             </div>
         </div>
     )

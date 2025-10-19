@@ -1,5 +1,9 @@
-const DrawComputerBoard = ({ boardObject, handleComputerBoardClick }) => {
+const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => {
     const board = boardObject.getBoard()
+
+    //function that doesn't do anything
+    //its just there so that onClick property isn't undefined
+    const noop = () => {}
 
     return (
         <div>
@@ -28,7 +32,7 @@ const DrawComputerBoard = ({ boardObject, handleComputerBoardClick }) => {
                             }
 
                             return <div 
-                                onClick={() => {handleComputerBoardClick(rowIndex, cellIndex)}}
+                                onClick={isComputerBoard ? () => {handleComputerBoardClick(rowIndex, cellIndex)} : noop}
                                 key={cellIndex} 
                                 style={styles} 
                                 className='cell border border-primary d-flex align-items-center justify-content-center'>
@@ -39,6 +43,6 @@ const DrawComputerBoard = ({ boardObject, handleComputerBoardClick }) => {
             </div>
         </div>
     )
-} 
+}
 
-export default DrawComputerBoard
+export default DrawBoard
