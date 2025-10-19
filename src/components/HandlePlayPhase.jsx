@@ -1,8 +1,7 @@
-
 import DrawBoard from './DrawBoard'
 import { useState } from 'react'
 
-const HandlePlayPhase = ({ playerBoardObject, computerObject, setGamePhase }) => {
+const HandlePlayPhase = ({ playerBoardObject, computerObject }) => {
     const [message, setMessage] = useState('')
     const [hitMessage, setHitMessage] = useState('m')
     const [isComputerTurn, setIsComputerTurn] = useState(false)
@@ -33,10 +32,8 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, setGamePhase }) =>
             setMessage('Your turn, human...')
             setIsComputerTurn(false)
             checkIfGameOver()
-        }, (Math.random() + 1) * 100) //pistä tää tonniin ku deployaat
-
-        
-        //handle starting a new game here
+            //handle starting a new game here
+        }, (Math.random() + 1) * 100) //put this to 1000 when ready
     }
 
     return (

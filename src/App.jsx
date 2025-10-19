@@ -54,7 +54,7 @@ function App() {
 
             {gamePhase === 'playPhase' && (
                 <>
-                    <HandlePlayPhase playerBoardObject={playerBoardObject} computerObject={computerBoardObject} setGamePhase={setGamePhase}/>
+                    <HandlePlayPhase playerBoardObject={playerBoardObject} computerObject={computerBoardObject}/>
                 </>
             )}
 
