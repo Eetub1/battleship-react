@@ -102,10 +102,10 @@ class Gameboard {
     }
 
     markHit(row, col) {
-        console.log(this.ships)
-        console.log('Tälläsee osuttiin: ', this.board[row][col])
+        //console.log(this.ships)
+        //console.log('Tälläsee osuttiin: ', this.board[row][col])
         const hitShip = this.ships.find(ship => ship.marker === this.board[row][col])
-        console.log('Osuttu laivaolio: ', hitShip);
+        //console.log('Osuttu laivaolio: ', hitShip);
         const shipInfo = hitShip.markHitOnShip()
         return shipInfo
     }

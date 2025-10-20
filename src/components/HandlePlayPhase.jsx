@@ -34,7 +34,7 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, playerName }) => {
             setIsComputerTurn(false)
             checkIfGameOver()
             //handle starting a new game here
-        }, (Math.random() + 1) * 1000) //put this to 1000 when ready
+        }, (Math.random() + 1) * 100) //put this to 1000 when ready
     }
 
     return (
