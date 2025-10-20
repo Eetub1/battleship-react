@@ -2,14 +2,15 @@ import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import DrawShipPlacementBoard from './DrawShipPlacementBoard'
 
-const HandlePlacePhase = ({ playerBoardObject, ships, setGamePhase}) => {
+import Gameboard from '../classes/gameboard'
+
+const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, ships, setGamePhase}) => {
     const [currentShipIndex, setCurrentShipIndex] = useState(1)
     const [currentShip, setCurrentShip] = useState(ships[0])
     const [isHorizontal, setIsHorizontal] = useState(true)
     const [hoverCells, setHoverCells] = useState([])
     const [isValidPlacement, setIsValidPlacement] = useState(null)
     const [confirmPlacementVisible, setConfirmPlacementVisible] = useState(false)
-
     //this variable tracks if random placement button has been pressed
     //so that you cant manually place ships if there are alreay random ships on board
     const [isShipRandomPlacement, setIsShipRandomPlacement] = useState(false) 
@@ -49,7 +50,6 @@ const HandlePlacePhase = ({ playerBoardObject, ships, setGamePhase}) => {
     const handleRandomPlacement = () => {
         setIsShipRandomPlacement(true)
         playerBoardObject.placeShipsRandomly(ships)
-
         //this row forces react to update the UI, doesnt actually do anything useful
         setHoverCells([...hoverCells])
         setConfirmPlacementVisible(true)
@@ -58,7 +58,11 @@ const HandlePlacePhase = ({ playerBoardObject, ships, setGamePhase}) => {
     const placeShipsManually = () => {
         setIsShipRandomPlacement(false)
         setConfirmPlacementVisible(false)
-        //TODO: need to clear the board of ships here
+        //we clear the board of already placed ships by creating a new board object
+        //that is the same size as the previous
+        setPlayerBoardObject(new Gameboard(playerBoardObject.size))
+        setCurrentShipIndex(1)
+        setCurrentShip(ships[0])
     }
 
     return (

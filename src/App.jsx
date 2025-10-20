@@ -11,11 +11,7 @@ import Header from './components/Header'
 
 
 function App() {
-    const [playerBoardObject] = useState(new Gameboard(10))
-    const [gamePhase, setGamePhase] = useState('beginPhase')
-
-    const [playername, setPlayerName] = useState('')
-
+    const boardSize = 10
 
     const ships = [
         new Ship('carrier'),
@@ -24,10 +20,15 @@ function App() {
         new Ship('submarine'),
         new Ship('destroyer'),
     ]
-    playerBoardObject.ships = ships
 
-    const computerBoardObject = new Gameboard(10)
-    computerBoardObject.ships = ships
+    const [gamePhase, setGamePhase] = useState('beginPhase')
+    const [playername, setPlayerName] = useState('')
+
+    const [playerBoardObject, setPlayerBoardObject] = useState(new Gameboard(boardSize))
+    playerBoardObject.setShips(ships)
+
+    const computerBoardObject = new Gameboard(boardSize)
+    computerBoardObject.setShips(ships)
     computerBoardObject.placeShipsRandomly(ships)
 
     return (
@@ -44,7 +45,7 @@ function App() {
 
             {gamePhase === 'placePhase' && (
                 <>
-                    <HandlePlacePhase playerBoardObject={playerBoardObject} ships={ships} setGamePhase={setGamePhase} />
+                    <HandlePlacePhase playerBoardObject={playerBoardObject} setPlayerBoardObject={setPlayerBoardObject} ships={ships} setGamePhase={setGamePhase} />
                 </>
             )}
 

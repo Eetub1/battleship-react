@@ -16,7 +16,7 @@ const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => 
                         {row.map((cell, cellIndex) => {
                             const styles = {flex: 1, aspectRatio: '1'}
                             
-                            //mystery constants!
+                            //mystery constants! fix later
                             switch (board[rowIndex][cellIndex]) {
                                 case 'o':
                                     break

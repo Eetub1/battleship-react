@@ -19,6 +19,8 @@ class Gameboard {
         return this.board
     }
 
+    setShips(ships) {this.ships = ships}
+
     setBoard() {
         const board = []
 
