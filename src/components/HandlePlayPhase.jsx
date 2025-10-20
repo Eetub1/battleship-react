@@ -25,6 +25,7 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, playerName }) => {
         }, 750)
         if (!hitInfo.wasValid) return
 
+
         setIsComputerTurn(true)
         setMessage('Calculating response...')
         setTimeout(() => {
@@ -40,12 +41,14 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, playerName }) => {
         <div className='d-flex flex-column justify-content-center'>
             <div style={{minHeight: '5rem'}} className='d-flex flex-column align-items-center text-white mt-4'>
                 <h4>{message}</h4>
-                <h4>{hitMessage}</h4> 
             </div>
             <div className='d-flex justify-content-center'></div>
-            <div className='d-flex justify-content-center gap-5 mt-2'>
+            <div className='d-flex justify-content-center gap-5'>
                 <DrawBoard boardObject={playerBoardObject} isComputerBoard={false}/>
                 <DrawBoard boardObject={computerObject} isComputerBoard={true} handleComputerBoardClick={handleComputerBoardClick}/>
+            </div>
+            <div style={{minHeight: '5rem'}} className='d-flex flex-column align-items-center text-white mt-4'>
+                <h4>{hitMessage}</h4> 
             </div>
         </div>
     )

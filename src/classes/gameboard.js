@@ -104,7 +104,8 @@ class Gameboard {
         console.log('Tälläsee osuttiin: ', this.board[row][col])
         const hitShip = this.ships.find(ship => ship.marker === this.board[row][col])
         console.log('Osuttu laivaolio: ', hitShip);
-        hitShip.markHitOnShip()
+        const shipInfo = hitShip.markHitOnShip()
+        return shipInfo
     }
 
     //validates if the strike on a given square is a hit
@@ -125,9 +126,11 @@ class Gameboard {
             this.board[row][col] = this.CONSTANTS.MISS
         } else {
             hitInfo.wasHit = true
-            this.markHit(row, col)
+            //if was hit, then we add an a field to hitInfo that is an object
+            //which contains the name and the info if the ship was sunk with the hit
+            hitInfo.shipInfo = this.markHit(row, col)
             this.board[row][col] = this.CONSTANTS.HIT
-            hitInfo.message = 'Nice hit!'
+            hitInfo.message = `Hit enemy ${hitInfo.shipInfo.name}!`
         }
         return hitInfo
     }

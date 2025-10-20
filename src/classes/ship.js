@@ -45,12 +45,18 @@ class Ship {
     }
 
     markHitOnShip() {
+        const shipInfo = {
+            name: this.name,
+            wasSunk: false
+        }
         if (this.hitPoints === 0) return
         this.hitPoints -= 1
-        if (this.hitPoints == 0) {
+        if (this.hitPoints === 0) {
             this.isSunk = true
+            shipInfo.wasSunk = true
             console.log(`${this.name} has been sunk`, this)
         }
+        return shipInfo
     }
 }
 
