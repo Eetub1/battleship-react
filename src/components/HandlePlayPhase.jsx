@@ -22,7 +22,7 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, playerName }) => {
         setHitMessage(hitInfo.message)
         setTimeout(() => {
             setHitMessage('')
-        }, 750)
+        }, 1000)
         if (!hitInfo.wasValid) return
 
 

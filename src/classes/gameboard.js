@@ -117,7 +117,7 @@ class Gameboard {
             message: 'You missed!'
         }
 
-        //jos ruudussa on hit tai miss, niin sitä ei voi painaa
+        //if cell contains hit or miss, you can't strike it anymore
         if (this.board[row][col] === this.CONSTANTS.HIT || this.board[row][col] === this.CONSTANTS.MISS) {
             hitInfo.wasValid = false
             hitInfo.message = 'Not a valid square!'

@@ -7,6 +7,7 @@ import HandlePlacePhase from './components/handlePlacePhase'
 import HandlePlayPhase from './components/HandlePlayPhase'
 import NameForm from './components/NameForm'
 import Footer from './components/Footer'
+import Header from './components/Header'
 
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
 
     return (
         <>
+            <Header/>
+
             {gamePhase === 'beginPhase' && (
                 <>
                     <NameForm 
