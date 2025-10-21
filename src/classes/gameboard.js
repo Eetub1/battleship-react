@@ -38,6 +38,7 @@ class Gameboard {
         for (const ship of this.ships) {
             if (!ship.isSunk) return false 
         }
+        console.log('Kaikki laivat upotettu', this.ships)
         return true
     }
 

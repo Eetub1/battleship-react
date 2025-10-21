@@ -21,6 +21,15 @@ function App() {
         new Ship('destroyer'),
     ]
 
+    const computerShips = [
+        new Ship('carrier'),
+        new Ship('battleship'),
+        new Ship('cruiser'),
+        new Ship('submarine'),
+        new Ship('destroyer'),
+    ]
+
+
     const [gamePhase, setGamePhase] = useState('beginPhase')
     const [playername, setPlayerName] = useState('')
 
@@ -29,7 +38,7 @@ function App() {
 
     const computerBoardObject = new Gameboard(boardSize)
     computerBoardObject.setShips(ships)
-    computerBoardObject.placeShipsRandomly(ships)
+    computerBoardObject.placeShipsRandomly(computerShips)
 
     return (
         <>

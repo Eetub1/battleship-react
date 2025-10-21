@@ -2,7 +2,7 @@ import DrawBoard from './DrawBoard'
 import { useState } from 'react'
 
 const HandlePlayPhase = ({ playerBoardObject, computerObject, playerName }) => {
-    const [message, setMessage] = useState('')
+    const [message, setMessage] = useState(`Your turn, ${playerName}...`)
     const [hitMessage, setHitMessage] = useState('')
     const [isComputerTurn, setIsComputerTurn] = useState(false)
     const [isGameOver, setIsGameOver] = useState(false)
@@ -19,6 +19,7 @@ const HandlePlayPhase = ({ playerBoardObject, computerObject, playerName }) => {
         if (isComputerTurn) return
 
         const hitInfo = computerObject.validateHit(rowIndex, cellIndex)
+        console.log(hitInfo)
         setHitMessage(hitInfo.message)
         setTimeout(() => {
             setHitMessage('')
