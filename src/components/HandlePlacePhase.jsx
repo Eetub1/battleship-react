@@ -8,7 +8,7 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, ships, setG
     const [currentShipIndex, setCurrentShipIndex] = useState(1)
     const [currentShip, setCurrentShip] = useState(ships[0])
     const [isHorizontal, setIsHorizontal] = useState(true)
-    const [hoverCells, setHoverCells] = useState([])
+    const [highlightedCells, setHighlightedCells] = useState([])
     const [isValidPlacement, setIsValidPlacement] = useState(null)
     const [confirmPlacementVisible, setConfirmPlacementVisible] = useState(false)
     //this variable tracks if random placement button has been pressed
@@ -33,7 +33,7 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, ships, setG
     const handleMouseEnter = (rowIndex, cellIndex) => {
         if (isShipRandomPlacement) return
         setIsValidPlacement(playerBoardObject.validatePlacement(rowIndex, cellIndex, isHorizontal, shipLength))
-        setHoverCells([])
+        setHighlightedCells([])
         const cells = []
         if (isHorizontal) {
             for (let i = cellIndex; i < cellIndex + shipLength; i++) {
@@ -44,14 +44,14 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, ships, setG
                 cells.push([i, cellIndex])
             }
         }
-        setHoverCells(cells)
+        setHighlightedCells(cells)
     }
 
     const handleRandomPlacement = () => {
         setIsShipRandomPlacement(true)
         playerBoardObject.placeShipsRandomly(ships)
         //this row forces react to update the UI, doesnt actually do anything useful
-        setHoverCells([...hoverCells])
+        setHighlightedCells([...highlightedCells])
         setConfirmPlacementVisible(true)
     }
 
@@ -73,8 +73,8 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, ships, setG
 
                 <DrawShipPlacementBoard
                     board={board}
-                    hoverCells={hoverCells}
-                    setHoverCells={setHoverCells}
+                    highlightedCells={highlightedCells}
+                    setHighlightedCells={setHighlightedCells}
                     isValidPlacement={isValidPlacement}
                     handleClick={handleClick}
                     handleMouseEnter={handleMouseEnter}/>

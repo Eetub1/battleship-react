@@ -1,7 +1,7 @@
 const DrawShipPlacementBoard = ({
     board,
-    hoverCells,
-    setHoverCells,
+    highlightedCells,
+    setHighlightedCells,
     isValidPlacement,
     handleClick,
     handleMouseEnter }) => {
@@ -18,7 +18,7 @@ const DrawShipPlacementBoard = ({
                             aspectRatio: '1'
                         }
 
-                        if (hoverCells.find(cell => cell[0] === rowIndex && cell[1] === cellIndex)) {
+                        if (highlightedCells.find(cell => cell[0] === rowIndex && cell[1] === cellIndex)) {
                             if (isValidPlacement) styles.backgroundColor = 'rgba(8, 124, 47, 1)'
                             else styles.backgroundColor = 'rgba(184, 38, 38, 1)'
                         }
@@ -29,7 +29,7 @@ const DrawShipPlacementBoard = ({
                         return <div 
                             onClick={() => handleClick(rowIndex, cellIndex)} 
                             onMouseEnter={() => {handleMouseEnter(rowIndex, cellIndex)}}
-                            onMouseLeave={() => setHoverCells([])}
+                            onMouseLeave={() => setHighlightedCells([])}
                             key={cellIndex} 
                             style={styles} 
                             className='cell border border-gray d-flex align-items-center justify-content-center'>
