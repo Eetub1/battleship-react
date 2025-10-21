@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 import Gameboard from './classes/gameboard'
 import Ship from './classes/ship'
@@ -13,62 +13,61 @@ import Header from './components/Header'
 function App() {
     const boardSize = 10
 
-    const ships = [
+    const initialShips = useMemo(() => [
         new Ship('carrier'),
         new Ship('battleship'),
         new Ship('cruiser'),
         new Ship('submarine'),
         new Ship('destroyer'),
-    ]
-
-    const computerShips = [
-        new Ship('carrier'),
-        new Ship('battleship'),
-        new Ship('cruiser'),
-        new Ship('submarine'),
-        new Ship('destroyer'),
-    ]
-
+    ], [])
 
     const [gamePhase, setGamePhase] = useState('beginPhase')
-    const [playername, setPlayerName] = useState('')
+    const [playerName, setPlayerName] = useState('')
 
-    const [playerBoardObject, setPlayerBoardObject] = useState(new Gameboard(boardSize))
-    playerBoardObject.setShips(ships)
+    const [playerBoardObject, setPlayerBoardObject] = useState(() => {
+        const board = new Gameboard(boardSize)
+        board.setShips(initialShips)
+        return board
+    })
 
-    const computerBoardObject = new Gameboard(boardSize)
-    computerBoardObject.setShips(ships)
-    computerBoardObject.placeShipsRandomly(computerShips)
+    const computerBoardObject = useMemo(() => {
+        const board = new Gameboard(boardSize)
+        board.setShips(initialShips)
+        board.placeShipsRandomly(initialShips)
+        return board
+    }, [boardSize, initialShips])
+
+    const renderPhase = () => {
+        switch (gamePhase) {
+            case 'beginPhase':
+                return <NameForm setPlayerName={setPlayerName} setGamePhase={setGamePhase} />
+            case 'placePhase':
+                return (
+                    <HandlePlacePhase
+                        playerBoardObject={playerBoardObject}
+                        setPlayerBoardObject={setPlayerBoardObject}
+                        ships={initialShips}
+                        setGamePhase={setGamePhase}/>
+                )
+            case 'playPhase':
+                return (
+                    <HandlePlayPhase
+                        playerBoardObject={playerBoardObject}
+                        computerObject={computerBoardObject}
+                        playerName={playerName}/>
+                )
+            case 'endPhase':
+                return <div>game ended</div>
+            default:
+                return null
+        }
+    }
 
     return (
         <>
-            <Header/>
-
-            {gamePhase === 'beginPhase' && (
-                <>
-                    <NameForm 
-                        setPlayerName={setPlayerName}
-                        setGamePhase={setGamePhase}/>
-                </>
-            )}
-
-            {gamePhase === 'placePhase' && (
-                <>
-                    <HandlePlacePhase playerBoardObject={playerBoardObject} setPlayerBoardObject={setPlayerBoardObject} ships={ships} setGamePhase={setGamePhase} />
-                </>
-            )}
-
-            {gamePhase === 'playPhase' && (
-                <>
-                    <HandlePlayPhase playerBoardObject={playerBoardObject} computerObject={computerBoardObject} playerName={playername}/>
-                </>
-            )}
-
-            {gamePhase === 'endPhase' && (
-                <div>game ended</div>
-            )}
-
-            <Footer/>
+            <Header />
+            {renderPhase()}
+            <Footer />
         </>
     )
 }
