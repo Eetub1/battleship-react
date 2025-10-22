@@ -1,3 +1,6 @@
+import constants from "../utils/constants"
+const CONSTANTS = constants()
+
 const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => {
     const board = boardObject.getBoard()
 
@@ -18,12 +21,12 @@ const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => 
                             
                             //mystery constants! fix later
                             switch (board[rowIndex][cellIndex]) {
-                                case 'o':
+                                case CONSTANTS.EMPTY:
                                     break
-                                case 'm':
+                                case CONSTANTS.MISS:
                                     styles.backgroundColor = 'rgba(184, 38, 38, 1)'
                                     break
-                                case 'x':
+                                case CONSTANTS.HIT:
                                     styles.backgroundColor = 'rgba(8, 124, 47, 1)'
                                     break
                                 default:

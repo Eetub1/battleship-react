@@ -1,3 +1,6 @@
+import constants from "../utils/constants"
+const CONSTANTS = constants()
+
 const DrawShipPlacementBoard = ({
     board,
     highlightedCells,
@@ -24,7 +27,7 @@ const DrawShipPlacementBoard = ({
                         }
 
                         //mystery constant variable fix later!
-                        if (board[rowIndex][cellIndex] !== 'o') styles.backgroundColor = 'white'
+                        if (board[rowIndex][cellIndex] !== CONSTANTS.EMPTY) styles.backgroundColor = 'white'
 
                         return <div 
                             onClick={() => handleClick(rowIndex, cellIndex)} 
