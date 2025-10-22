@@ -26,7 +26,6 @@ const DrawShipPlacementBoard = ({
                             else styles.backgroundColor = 'rgba(184, 38, 38, 1)'
                         }
 
-                        //mystery constant variable fix later!
                         if (board[rowIndex][cellIndex] !== CONSTANTS.EMPTY) styles.backgroundColor = 'white'
 
                         return <div 

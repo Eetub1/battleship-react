@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react'
 
 import Gameboard from './classes/gameboard'
-import Ship from './classes/ship'
 
 import createDefaultShips from './utils/createDefaultShips'
 
@@ -15,7 +14,6 @@ const BOARDSIZE = 10
 
 function App() {
     const initialShips = useMemo(() => createDefaultShips(), [])
-
     const [gamePhase, setGamePhase] = useState('beginPhase')
     const [playerName, setPlayerName] = useState('')
 
@@ -27,10 +25,11 @@ function App() {
 
     const computerBoardObject = useMemo(() => {
         const board = new Gameboard(BOARDSIZE)
-        board.setShips(initialShips)
-        board.placeShipsRandomly(initialShips)
+        const computerShips = createDefaultShips()
+        board.setShips(computerShips)
+        board.placeShipsRandomly(computerShips)
         return board
-    }, [initialShips])
+    }, [])
 
     const renderPhase = () => {
         switch (gamePhase) {
