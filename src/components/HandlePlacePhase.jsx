@@ -13,8 +13,9 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
         return ships
     }, [playerBoardObject])
     
-    const [currentShipIndex, setCurrentShipIndex] = useState(1)
-    const [currentShip, setCurrentShip] = useState(ships[0])
+    const [currentShipIndex, setCurrentShipIndex] = useState(0)
+    const currentShip = ships[currentShipIndex]
+
     const [isHorizontal, setIsHorizontal] = useState(true)
     const [highlightedCells, setHighlightedCells] = useState([])
     const [isValidPlacement, setIsValidPlacement] = useState(null)
@@ -27,13 +28,15 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
     const shipLength = currentShip.getShipLength()
 
     const handleClick = (rowIndex, cellIndex) => {
-        if (isShipRandomPlacement) return
-        if (isValidPlacement) playerBoardObject.placeShip(rowIndex, cellIndex, isHorizontal, currentShip)
-        else return
+        if (isShipRandomPlacement || !isValidPlacement) return
+        playerBoardObject.placeShip(rowIndex, cellIndex, isHorizontal, currentShip)
 
-        setCurrentShipIndex(currentShipIndex + 1)
-        if (currentShipIndex >= shipAmount) setGamePhase('playPhase')
-        else setCurrentShip(ships[currentShipIndex])
+        const nextIndex = currentShipIndex + 1
+
+        if (currentShipIndex + 1 >= shipAmount) setGamePhase('playPhase')
+        else {
+            setCurrentShipIndex(nextIndex)
+        }
     }
 
     const handleMouseEnter = (rowIndex, cellIndex) => {
@@ -66,8 +69,7 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
         //that is the same size as the previous
         setPlayerBoardObject(new Gameboard(playerBoardObject.size))
         playerBoardObject.setShips(ships)
-        setCurrentShipIndex(1)
-        setCurrentShip(ships[0])
+        setCurrentShipIndex(0)
     }
 
     return (
