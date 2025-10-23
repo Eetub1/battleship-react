@@ -1,10 +1,20 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Button } from 'react-bootstrap'
 import DrawShipPlacementBoard from './DrawShipPlacementBoard'
 
 import Gameboard from '../classes/gameboard'
 
-const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, ships, setGamePhase}) => {
+import createDefaultShips from '../utils/createDefaultShips'
+
+const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhase}) => {
+
+    const ships = useMemo(() => {
+        const ships = createDefaultShips()
+        playerBoardObject.resetBoard()
+        playerBoardObject.ships = ships
+        return ships
+    }, [playerBoardObject])
+    
     const [currentShipIndex, setCurrentShipIndex] = useState(1)
     const [currentShip, setCurrentShip] = useState(ships[0])
     const [isHorizontal, setIsHorizontal] = useState(true)

@@ -1,8 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 
 import Gameboard from './classes/gameboard'
-
-import createDefaultShips from './utils/createDefaultShips'
 
 import HandlePlacePhase from './components/handlePlacePhase'
 import HandlePlayPhase from './components/HandlePlayPhase'
@@ -13,14 +11,11 @@ import Header from './components/Header'
 const BOARDSIZE = 10
 
 function App() {
-    const initialShips = useMemo(() => createDefaultShips(), [])
     const [gamePhase, setGamePhase] = useState('beginPhase')
     const [playerName, setPlayerName] = useState('')
 
     const [playerBoardObject, setPlayerBoardObject] = useState(() => {
-        const board = new Gameboard(BOARDSIZE)
-        board.setShips(initialShips)
-        return board
+        return new Gameboard(BOARDSIZE)
     })
 
     const renderPhase = () => {
@@ -32,7 +27,6 @@ function App() {
                     <HandlePlacePhase
                         playerBoardObject={playerBoardObject}
                         setPlayerBoardObject={setPlayerBoardObject}
-                        ships={initialShips}
                         setGamePhase={setGamePhase}/>
                 )
             case 'playPhase':

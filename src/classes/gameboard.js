@@ -34,6 +34,10 @@ class Gameboard {
         return board
     }
 
+    resetBoard() {
+        this.board = this.setBoard()
+    }
+
     checkIfAllShipsSunk() {
         for (const ship of this.ships) {
             if (!ship.isSunk) return false 
