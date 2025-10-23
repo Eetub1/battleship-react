@@ -54,9 +54,9 @@ class Ship {
         if (this.hitPoints === 0) {
             this.isSunk = true
             shipInfo.wasSunk = true
-            console.log(`${this.name} has been sunk`, this)
+            //console.log(`${this.name} has been sunk`, this)
         }
-        console.log(`Osuttiin laivaan nimeltä ${this.name} onko upotettu: ${shipInfo.wasSunk}`)
+        //console.log(`Osuttiin laivaan nimeltä ${this.name} onko upotettu: ${shipInfo.wasSunk}`)
         return shipInfo
     }
 }

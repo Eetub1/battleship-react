@@ -23,14 +23,6 @@ function App() {
         return board
     })
 
-    const computerBoardObject = useMemo(() => {
-        const board = new Gameboard(BOARDSIZE)
-        const computerShips = createDefaultShips()
-        board.setShips(computerShips)
-        board.placeShipsRandomly(computerShips)
-        return board
-    }, [])
-
     const renderPhase = () => {
         switch (gamePhase) {
             case 'beginPhase':
@@ -47,11 +39,9 @@ function App() {
                 return (
                     <HandlePlayPhase
                         playerBoardObject={playerBoardObject}
-                        computerObject={computerBoardObject}
-                        playerName={playerName}/>
+                        playerName={playerName}
+                        setGamePhase={setGamePhase}/>
                 )
-            case 'endPhase':
-                return <div>game ended</div>
             default:
                 return null
         }
