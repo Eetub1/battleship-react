@@ -1,30 +1,23 @@
 import DrawBoard from './DrawBoard'
 import { useState, useMemo } from 'react'
-
 import { Button } from 'react-bootstrap'
 
 import Gameboard from '../classes/gameboard'
-
 import createDefaultShips from '../utils/createDefaultShips'
 
-//bring this as a prop perhaps?
-const BOARDSIZE = 10
-
-const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase }) => {
+const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSize }) => {
     const [message, setMessage] = useState(`Your turn, ${playerName}...`)
     const [hitMessage, setHitMessage] = useState('')
     const [isComputerTurn, setIsComputerTurn] = useState(false)
     const [isGameOver, setIsGameOver] = useState(false)
 
-    //The computerboardobject is now set here inside a useMemo hook, so that
-    //its only ever done once per game
     const computerBoardObject = useMemo(() => {
-        const computerBoardObject = new Gameboard(BOARDSIZE)
+        const computerBoardObject = new Gameboard(boardSize)
         const computerShips = createDefaultShips()
         computerBoardObject.setShips(computerShips)
         computerBoardObject.placeShipsRandomly(computerShips)
         return computerBoardObject
-    }, [])
+    }, [boardSize])
 
     const checkIfGameOver = () => {
         if (playerBoardObject.checkIfAllShipsSunk() || computerBoardObject.checkIfAllShipsSunk()) {
@@ -37,20 +30,7 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase }) => {
         setGamePhase('placePhase')
     }
 
-    const handleComputerBoardClick = (rowIndex, cellIndex) => {
-        if (isGameOver) return
-        if (isComputerTurn) return
-
-        const hitInfo = computerBoardObject.validateHit(rowIndex, cellIndex)
-        //console.log(hitInfo)
-        setHitMessage(hitInfo.message)
-        setTimeout(() => {
-            setHitMessage('')
-        }, 1000)
-        if (!hitInfo.wasValid) return
-
-
-        setIsComputerTurn(true)
+    const computerMove = () => {
         setMessage('Calculating response...')
         setTimeout(() => {
             playerBoardObject.calculateRandomResponse()
@@ -58,6 +38,17 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase }) => {
             setIsComputerTurn(false)
             checkIfGameOver()
         }, (Math.random() + 1) * 100) //put this to 1000 when ready
+    }
+
+    const handleComputerBoardClick = (rowIndex, cellIndex) => {
+        if (isGameOver || isComputerTurn) return
+
+        const hitInfo = computerBoardObject.validateHit(rowIndex, cellIndex)
+        setHitMessage(hitInfo.message)
+        setTimeout(() => setHitMessage(''), 1000)
+        if (!hitInfo.wasValid) return
+        setIsComputerTurn(true)
+        computerMove()
     }
 
     return (

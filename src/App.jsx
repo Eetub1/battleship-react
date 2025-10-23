@@ -13,10 +13,7 @@ const BOARDSIZE = 10
 function App() {
     const [gamePhase, setGamePhase] = useState('beginPhase')
     const [playerName, setPlayerName] = useState('')
-
-    const [playerBoardObject, setPlayerBoardObject] = useState(() => {
-        return new Gameboard(BOARDSIZE)
-    })
+    const [playerBoardObject, setPlayerBoardObject] = useState(() => new Gameboard(BOARDSIZE))
 
     const renderPhase = () => {
         switch (gamePhase) {
@@ -34,10 +31,11 @@ function App() {
                     <HandlePlayPhase
                         playerBoardObject={playerBoardObject}
                         playerName={playerName}
-                        setGamePhase={setGamePhase}/>
+                        setGamePhase={setGamePhase}
+                        boardSize={BOARDSIZE}/>
                 )
             default:
-                return null
+                return <div>Something went wrong with setting state</div>
         }
     }
 

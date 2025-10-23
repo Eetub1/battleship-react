@@ -123,7 +123,6 @@ class Gameboard {
             wasHit: false,
             message: 'You missed!'
         }
-
         //if cell contains hit or miss, you can't strike it anymore
         if (this.board[row][col] === this.CONSTANTS.HIT || this.board[row][col] === this.CONSTANTS.MISS) {
             hitInfo.wasValid = false
@@ -137,8 +136,6 @@ class Gameboard {
             //which contains the name and the info if the ship was sunk with the hit
             hitInfo.shipInfo = this.markHit(row, col)
             this.board[row][col] = this.CONSTANTS.HIT
-
-            //TODO: fix bug, on this line the name variable is undefined sometimes
             hitInfo.message = `Hit enemy ${hitInfo.shipInfo.name}!`
         }
         return hitInfo

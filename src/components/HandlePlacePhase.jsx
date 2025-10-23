@@ -3,11 +3,9 @@ import { Button } from 'react-bootstrap'
 import DrawShipPlacementBoard from './DrawShipPlacementBoard'
 
 import Gameboard from '../classes/gameboard'
-
 import createDefaultShips from '../utils/createDefaultShips'
 
 const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhase}) => {
-
     const ships = useMemo(() => {
         const ships = createDefaultShips()
         playerBoardObject.resetBoard()
@@ -21,8 +19,7 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
     const [highlightedCells, setHighlightedCells] = useState([])
     const [isValidPlacement, setIsValidPlacement] = useState(null)
     const [confirmPlacementVisible, setConfirmPlacementVisible] = useState(false)
-    //this variable tracks if random placement button has been pressed
-    //so that you cant manually place ships if there are alreay random ships on board
+    //this variable tracks if random placement button has been pressed so you cant put ships manually
     const [isShipRandomPlacement, setIsShipRandomPlacement] = useState(false) 
 
     const shipAmount = ships.length
@@ -31,7 +28,6 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
 
     const handleClick = (rowIndex, cellIndex) => {
         if (isShipRandomPlacement) return
-
         if (isValidPlacement) playerBoardObject.placeShip(rowIndex, cellIndex, isHorizontal, currentShip)
         else return
 
@@ -60,8 +56,6 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
     const handleRandomPlacement = () => {
         setIsShipRandomPlacement(true)
         playerBoardObject.placeShipsRandomly(ships)
-        //this row forces react to update the UI, doesnt actually do anything useful
-        setHighlightedCells([...highlightedCells])
         setConfirmPlacementVisible(true)
     }
 
