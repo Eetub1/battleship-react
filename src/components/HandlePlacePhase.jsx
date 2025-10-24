@@ -44,6 +44,8 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
         setIsValidPlacement(playerBoardObject.validatePlacement(rowIndex, cellIndex, isHorizontal, shipLength))
         setHighlightedCells([])
         const cells = []
+
+        //could these loops be combined?
         if (isHorizontal) {
             for (let i = cellIndex; i < cellIndex + shipLength; i++) {
                 cells.push([rowIndex, i])

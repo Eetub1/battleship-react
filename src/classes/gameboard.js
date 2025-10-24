@@ -2,7 +2,12 @@ class Gameboard {
     constructor(size=10) {
         this.size = size
         this.board = this.setBoard()
-        this.ships = []
+        this.ships = [],
+        this.boardHitInfo = {
+            hits: []
+        }
+        //artificial intelligence mode, either 'hunt' or 'kill
+        this.AIMODE = 'hunt'
     }
 
     CONSTANTS = {
@@ -98,6 +103,23 @@ class Gameboard {
         }
     }
 
+    calculateSmartResponse() {
+        if (this.AIMODE === 'hunt') {
+            this.calculateRandomResponse()
+        } else {
+            
+        }
+        //hunt mode: randomly select cells with a bias in the center
+        
+        //kill mode: a ship has been found. This mode has the responsibility of destroying
+        //the ship
+    }
+
+    //has a bias towards the center of the board
+    calculateRandomResponseBiasCenter() {
+
+    }
+
     calculateRandomResponse() {
         while (true) {
             let randomRow = Math.floor(Math.random() * this.size)
@@ -107,10 +129,7 @@ class Gameboard {
     }
 
     markHit(row, col) {
-        //console.log(this.ships)
-        //console.log('Tälläsee osuttiin: ', this.board[row][col])
         const hitShip = this.ships.find(ship => ship.marker === this.board[row][col])
-        //console.log('Osuttu laivaolio: ', hitShip);
         const shipInfo = hitShip.markHitOnShip()
         return shipInfo
     }
@@ -137,6 +156,18 @@ class Gameboard {
             hitInfo.shipInfo = this.markHit(row, col)
             this.board[row][col] = this.CONSTANTS.HIT
             hitInfo.message = `Hit enemy ${hitInfo.shipInfo.name}!`
+        }
+        //record the hit coordinates so that computer can hunt ships in a smarter way
+        if (hitInfo.wasValid) {
+            const hitInfoObject = {
+                row: row,
+                col: col,
+                info: {
+                    wasHit: hitInfo.wasHit
+                }
+            }
+            this.boardHitInfo.hits.push(hitInfoObject)
+            for (const hit of this.boardHitInfo.hits) console.log(hit)
         }
         return hitInfo
     }

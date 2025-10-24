@@ -6,6 +6,7 @@ import Gameboard from '../classes/gameboard'
 import createDefaultShips from '../utils/createDefaultShips'
 
 const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSize }) => {
+    const [computerIntelligence, setComputerIntelligence] = useState('dumb')
     const [message, setMessage] = useState(`Your turn, ${playerName}...`)
     const [hitMessage, setHitMessage] = useState('')
     const [isComputerTurn, setIsComputerTurn] = useState(false)
@@ -33,11 +34,13 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
     const computerMove = () => {
         setMessage('Calculating response...')
         setTimeout(() => {
-            playerBoardObject.calculateRandomResponse()
+            if (computerIntelligence === 'dumb') playerBoardObject.calculateRandomResponse()
+            else playerBoardObject.calculateSmartResponse()
+
             setMessage(`Your turn, ${playerName}...`)
             setIsComputerTurn(false)
             checkIfGameOver()
-        }, (Math.random() + 1) * 100) //put this to 1000 when ready
+        }, (Math.random() + 1) * 1000) //put this to 1000 when ready   
     }
 
     const handleComputerBoardClick = (rowIndex, cellIndex) => {
@@ -49,6 +52,10 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
         if (!hitInfo.wasValid) return
         setIsComputerTurn(true)
         computerMove()
+    }
+
+    const toggleDifficulty = () => {
+        setComputerIntelligence(computerIntelligence === 'dumb' ? 'smart' : 'dumb')
     }
 
     return (
@@ -64,6 +71,8 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
             <div style={{minHeight: '5rem'}} className='d-flex flex-column align-items-center text-white mt-4'>
                 <h4>{hitMessage}</h4> 
                 <Button style={{display: isGameOver ? 'block' : 'none'}} onClick={handleNewGame}>Start new game?</Button>
+                <h4>Current computer level: {computerIntelligence}</h4> 
+                <Button onClick={toggleDifficulty}>Switch difficulty</Button>
             </div>
         </div>
     )

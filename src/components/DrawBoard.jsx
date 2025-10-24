@@ -29,7 +29,8 @@ const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => 
                                     styles.backgroundColor = 'rgba(8, 124, 47, 1)'
                                     break
                                 default:
-                                    styles.backgroundColor = 'white'
+                                    if (isComputerBoard) styles.backgroundColor = 'none'
+                                    else styles.backgroundColor = 'white'
                                     break
                             }
 
