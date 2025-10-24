@@ -11,7 +11,7 @@ import Header from './components/Header'
 const BOARDSIZE = 10
 
 function App() {
-    const [gamePhase, setGamePhase] = useState('beginPhase')
+    const [gamePhase, setGamePhase] = useState('placePhase')
     const [playerName, setPlayerName] = useState('')
     const [playerBoardObject, setPlayerBoardObject] = useState(() => new Gameboard(BOARDSIZE))
 

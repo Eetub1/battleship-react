@@ -40,7 +40,7 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
             setMessage(`Your turn, ${playerName}...`)
             setIsComputerTurn(false)
             checkIfGameOver()
-        }, (Math.random() + 1) * 1000) //put this to 1000 when ready   
+        }, (Math.random() + 1) * 100) //put this to 1000 when ready   
     }
 
     const handleComputerBoardClick = (rowIndex, cellIndex) => {

@@ -4,7 +4,16 @@ class Gameboard {
         this.board = this.setBoard()
         this.ships = [],
         this.boardHitInfo = {
-            hits: []
+            hits: [],
+            killModeInfo: {
+                initialFoundSquare: [],
+                directions : {
+                    top: null,
+                    right: null,
+                    bottom: null,
+                    left: null
+                }
+            }
         }
         //artificial intelligence mode, either 'hunt' or 'kill
         this.AIMODE = 'hunt'
@@ -105,14 +114,84 @@ class Gameboard {
 
     calculateSmartResponse() {
         if (this.AIMODE === 'hunt') {
+            //make this use the bias to center function when ready
             this.calculateRandomResponse()
         } else {
-            
+            const row = this.boardHitInfo.killModeInfo.initialFoundSquare[0]
+            const col = this.boardHitInfo.killModeInfo.initialFoundSquare[1]
+            const directions = this.boardHitInfo.killModeInfo.directions
+            console.log(directions)
+
+            //first we check if any direction is true so that we know 
+            //into which direction to continue our strikes
+            for (const key in directions) {
+                if (directions[key]) {
+                    console.log('This direction should be tried next: ', key)
+                    if (key === 'top') {
+                        const hitInfo = this.validateHit(row - 1, col)
+                        if (!hitInfo.wasValid || !hitInfo.wasHit) {
+                            directions.top = false
+                            this.AIMODE = 'hunt'
+                            return
+                        }
+                    } else if (key === 'right') {
+                        const hitInfo = this.validateHit(row, col + 1)
+                        if (!hitInfo.wasValid || !hitInfo.wasHit) {
+                            directions.right = false
+                            this.AIMODE = 'hunt'
+                            return
+                        }
+                    } else if (key === 'bottom') {
+                        const hitInfo = this.validateHit(row + 1, col)
+                        if (!hitInfo.wasValid || !hitInfo.wasHit) {
+                            directions.bottom = false
+                            this.AIMODE = 'hunt'
+                            return
+                        }
+                    } else if (key === 'left') {
+                        const hitInfo = this.validateHit(row, col - 1)
+                        if (!hitInfo.wasValid || !hitInfo.wasHit) {
+                            directions.left = false
+                            this.AIMODE = 'hunt'
+                            return
+                        }
+                    }
+                }
+            }
+            //if no direction was true then we start trying every direction one by one
+            //that isnt false. False means that that direction was tried already
+
+            //do this with a loop!!!!
+            if (directions.top === null) {
+                const hitInfo = this.validateHit(row - 1, col)
+                if (!hitInfo.wasValid || !hitInfo.wasHit) directions.top = false
+                else {
+                    directions.top = true
+                    this.boardHitInfo.killModeInfo.initialFoundSquare = [row - 1, col]
+                }
+            } else if (directions.right === null) {
+                const hitInfo = this.validateHit(row, col + 1)
+                if (!hitInfo.wasValid || !hitInfo.wasHit) directions.right = false
+                else {
+                    directions.right = true
+                    this.boardHitInfo.killModeInfo.initialFoundSquare = [row, col + 1]
+                }
+            } else if (directions.bottom === null) {
+                const hitInfo = this.validateHit(row + 1, col)
+                if (!hitInfo.wasValid || !hitInfo.wasHit) directions.bottom = false
+                else {
+                    directions.bottom = true
+                    this.boardHitInfo.killModeInfo.initialFoundSquare = [row + 1, col]
+                }
+            } else if (directions.left === null) {
+                const hitInfo = this.validateHit(row, col - 1)
+                if (!hitInfo.wasValid || !hitInfo.wasHit) directions.left = false
+                else {
+                    directions.bottom = true
+                    this.boardHitInfo.killModeInfo.initialFoundSquare = [row, col - 1]
+                }
+            }
         }
-        //hunt mode: randomly select cells with a bias in the center
-        
-        //kill mode: a ship has been found. This mode has the responsibility of destroying
-        //the ship
     }
 
     //has a bias towards the center of the board
@@ -137,6 +216,7 @@ class Gameboard {
     //validates if the strike on a given square is a hit
     //then it marks the square as either hit or missed
     validateHit(row, col) {
+        console.log(row, col);
         const hitInfo = {
             wasValid: true,
             wasHit: false,
@@ -166,8 +246,12 @@ class Gameboard {
                     wasHit: hitInfo.wasHit
                 }
             }
+            if (hitInfo.wasHit) {
+                this.boardHitInfo.killModeInfo.initialFoundSquare = [row, col]
+                this.AIMODE = 'kill'
+            }
             this.boardHitInfo.hits.push(hitInfoObject)
-            for (const hit of this.boardHitInfo.hits) console.log(hit)
+            //for (const hit of this.boardHitInfo.hits) console.log(hit)
         }
         return hitInfo
     }
