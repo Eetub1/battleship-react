@@ -132,6 +132,12 @@ class Gameboard {
                         if (!hitInfo.wasValid || !hitInfo.wasHit) {
                             directions.top = false
                             this.AIMODE = 'hunt'
+                            this.boardHitInfo.killModeInfo.directions =  {
+                                top: null,
+                                right: null,
+                                bottom: null,
+                                left: null
+                            }
                             return
                         }
                     } else if (key === 'right') {
@@ -139,6 +145,12 @@ class Gameboard {
                         if (!hitInfo.wasValid || !hitInfo.wasHit) {
                             directions.right = false
                             this.AIMODE = 'hunt'
+                            this.boardHitInfo.killModeInfo.directions =  {
+                                top: null,
+                                right: null,
+                                bottom: null,
+                                left: null
+                            }
                             return
                         }
                     } else if (key === 'bottom') {
@@ -146,6 +158,12 @@ class Gameboard {
                         if (!hitInfo.wasValid || !hitInfo.wasHit) {
                             directions.bottom = false
                             this.AIMODE = 'hunt'
+                            this.boardHitInfo.killModeInfo.directions =  {
+                                top: null,
+                                right: null,
+                                bottom: null,
+                                left: null
+                            }
                             return
                         }
                     } else if (key === 'left') {
@@ -153,6 +171,12 @@ class Gameboard {
                         if (!hitInfo.wasValid || !hitInfo.wasHit) {
                             directions.left = false
                             this.AIMODE = 'hunt'
+                            this.boardHitInfo.killModeInfo.directions =  {
+                                top: null,
+                                right: null,
+                                bottom: null,
+                                left: null
+                            }
                             return
                         }
                     }
