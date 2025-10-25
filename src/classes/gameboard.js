@@ -121,6 +121,7 @@ class Gameboard {
 
             //first we check if any direction is true so that we know 
             //into which direction to continue our strikes
+
             for (const key in directions) {
                 if (directions[key]) {
                     if (key === 'top') row -= 1
@@ -130,7 +131,6 @@ class Gameboard {
                     
                     const hitInfo = this.validateHit(row, col)
                     if (!hitInfo.wasValid || !hitInfo.wasHit) {
-                        this.boardHitInfo.directions[key] = false
                         this.AIMODE = 'hunt'
                         this.boardHitInfo.directions = {
                             top: null,
@@ -211,6 +211,9 @@ class Gameboard {
             this.board[row][col] = this.CONSTANTS.HIT
             hitInfo.message = `Hit enemy ${hitInfo.shipInfo.name}!`
         }
+
+        //right now this is also done to computer board which is pointless because the human player 
+        //puts the hits manually
 
         //record the hit coordinates so that computer can hunt ships in a smarter way
         if (hitInfo.wasValid && hitInfo.wasHit) {
