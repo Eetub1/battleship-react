@@ -8,7 +8,7 @@ const Header = () => {
 
     return (
         <div style={{minHeight: '70px'}} className='d-flex align-items-center text-white bg-dark'>
-            <Button className='ms-2' variant='secondary' onClick={handleShow}>Info</Button>
+            <Button className='ms-3' variant='secondary' onClick={handleShow}>Info</Button>
 
             <Modal
                 show={show}

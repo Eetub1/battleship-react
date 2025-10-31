@@ -13,7 +13,7 @@ const DrawShipPlacementBoard = ({
             {board.map((row, rowIndex) => {
                 return <div
                     key={rowIndex} 
-                    style={{width: '80vw', maxWidth: '600px'}} 
+                    style={{width: '80vw', maxWidth: '400px'}} 
                     className='d-flex flex-row'>
                     {row.map((cell, cellIndex) => {
                         const styles = {
