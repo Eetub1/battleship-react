@@ -143,7 +143,7 @@ class Gameboard {
                         if (result.wasHit) {
                             directions[direction] = true
                             this.AIMODE = 'strikeInDirection'
-                            directions = {
+                            this.boardHitInfo.directions = {
                                 top: null,
                                 right: null,
                                 bottom: null,
@@ -172,11 +172,13 @@ class Gameboard {
                 const result = this.validateHit(row, col)
 
                 if (!result.wasValid) {
-                    this.board.calculateRandomResponse()
+                    this.calculateRandomResponse()
                 } else {
                     if (result.wasHit) {
                         this.boardHitInfo.hitSquare = [row, col]
                         return
+                    } else {
+                        this.boardHitInfo.strikeDirection = 'none'
                     }
                 }
                 this.AIMODE = 'hunt'
