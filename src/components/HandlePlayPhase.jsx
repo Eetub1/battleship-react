@@ -13,7 +13,7 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
     const [isGameOver, setIsGameOver] = useState(false)
 
     const computerBoardObject = useMemo(() => {
-        const computerBoardObject = new Gameboard(boardSize)
+        const computerBoardObject = new Gameboard(boardSize, 'computer')
         const computerShips = createDefaultShips()
         computerBoardObject.setShips(computerShips)
         computerBoardObject.placeShipsRandomly(computerShips)

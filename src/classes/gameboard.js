@@ -1,9 +1,12 @@
 class Gameboard {
-    constructor(size=10) {
+    constructor(size=10, type='player') {
+        //either 'player' or 'computer'
+        this.type = type
         this.size = size
         this.board = this.setBoard()
         this.ships = [],
         this.boardHitInfo = {
+            strikeDirection: 'none',
             hitSquare: [],
             directions : {
                 top: null,
@@ -98,7 +101,6 @@ class Gameboard {
     placeShipsRandomly(ships) {
         //clearing the board of all previously placed ships
         this.board = this.setBoard()
-
         for (const ship of ships) {
             while (true) {
                 let randomRow = Math.floor(Math.random() * this.size)
@@ -112,53 +114,72 @@ class Gameboard {
     calculateSmartResponse() {
         if (this.AIMODE === 'hunt') {
             //make this use the bias to center function when ready
-            this.calculateRandomResponse()
+            //this.calculateRandomResponse()
+            this.calculateRandomResponseBiasCenter()
         } else {
-            //these coordinates are the latest succesful hit
-            let [row, col] = this.boardHitInfo.hitSquare
-            const directions = this.boardHitInfo.directions
-            console.log(directions)
+            //remember to put the mode back to hunt after done
+            //this could be divided to 2 further modes: just 'kill' and 'strikeInDirection'
+            //kill looks at directions one after another
+            //after the correct direction is found, we continue striking
+            if (this.AIMODE === 'kill') {
+                //console.log('Täällä ollaa!');
+                let [row, col] = this.boardHitInfo.hitSquare
+                //console.log(row, col)
+                let directions = this.boardHitInfo.directions
 
-            //first we check if any direction is true so that we know 
-            //into which direction to continue our strikes
+                for (const direction in directions) {
+                    let testRow = row
+                    let testCol = col
 
-            for (const key in directions) {
-                if (directions[key]) {
-                    if (key === 'top') row -= 1
-                    else if (key === 'right') col += 1
-                    else if (key === 'bottom') row += 1
-                    else col -= 1
-                    
-                    const hitInfo = this.validateHit(row, col)
-                    if (!hitInfo.wasValid || !hitInfo.wasHit) {
-                        this.AIMODE = 'hunt'
-                        this.boardHitInfo.directions = {
-                            top: null,
-                            right: null,
-                            bottom: null,
-                            left: null
+                    if (directions[direction] === null) {
+                        if (direction === 'top') testRow -= 1
+                        if (direction === 'right') testCol += 1
+                        if (direction === 'bottom') testRow += 1
+                        if (direction === 'left') testCol -= 1
+                        
+                        //console.log('Kokeillaan tätä suuntaa: ', direction)
+                        //console.log(testRow, testCol)
+                        const result = this.validateHit(testRow, testCol)
+                        if (result.wasHit) {
+                            directions[direction] = true
+                            this.AIMODE = 'strikeInDirection'
+                            directions = {
+                                top: null,
+                                right: null,
+                                bottom: null,
+                                left: null
+                            }
+                            this.boardHitInfo.strikeDirection = direction
+                            this.boardHitInfo.hitSquare = [testRow, testCol]
+                            return
+                        } else {
+                            directions[direction] = false
                         }
+                    }
+                }
+            } else {
+                console.log('Päästiin tänne')
+                //AIMODE is strikeInDirection
+                //tästä lähdetään iskemään tiettyyn suuntaan
+                //muista resettaa boardHitInfo.strikeDirection
+                let [row, col] = this.boardHitInfo.hitSquare
+                const direction = this.boardHitInfo.strikeDirection
+                if (direction === 'top') row -= 1
+                if (direction === 'right') col += 1
+                if (direction === 'bottom') row += 1
+                if (direction === 'left') col -= 1
+
+                const result = this.validateHit(row, col)
+
+                if (!result.wasValid) {
+                    this.board.calculateRandomResponse()
+                } else {
+                    if (result.wasHit) {
+                        this.boardHitInfo.hitSquare = [row, col]
                         return
                     }
                 }
-            }
-
-            //if no direction was true then we start trying every direction one by one
-            //that isnt false. False means that that direction was tried already
-            for (const key in directions) {
-                if (directions[key] === null) {
-                    if (key === 'top') row -= 1
-                    else if (key === 'right') col += 1
-                    else if (key === 'bottom') row += 1
-                    else col -= 1
-
-                    const hitInfo = this.validateHit(row, col)
-                    if (!hitInfo.wasValid || !hitInfo.wasHit) directions[key] = false
-                    else {
-                        directions[key] = true
-                        this.boardHitInfo.hitSquare = [row, col]
-                    }
-                }
+                this.AIMODE = 'hunt'
             }
         }
     }
@@ -167,7 +188,12 @@ class Gameboard {
     //if there have been more than 20 hits then we start trying in a more random way
     //so that we dont target the center anymore
     calculateRandomResponseBiasCenter() {
-
+        const nums = [2,3,4,5,6,7]
+        while (true) {
+            let randomRow = nums[Math.floor(Math.random() * nums.length)]
+            let randomCol = nums[Math.floor(Math.random() * nums.length)]
+            if (this.validateHit(randomRow, randomCol).wasValid) break
+        }
     }
 
     calculateRandomResponse() {
@@ -188,7 +214,7 @@ class Gameboard {
     //then it marks the square as either hit or missed
     //TODO refactor this method!!!!
     validateHit(row, col) {
-        console.log(row, col);
+        //console.log(row, col);
         const hitInfo = {
             wasValid: true,
             wasHit: false,
@@ -216,9 +242,12 @@ class Gameboard {
         //puts the hits manually
 
         //record the hit coordinates so that computer can hunt ships in a smarter way
-        if (hitInfo.wasValid && hitInfo.wasHit) {
-            this.boardHitInfo.hitSquare = [row, col]
-            this.AIMODE = 'kill'
+        if (this.type === 'player') {
+            //we save the hit info
+            if (hitInfo.wasValid && hitInfo.wasHit) {
+                this.boardHitInfo.hitSquare = [row, col]
+                this.AIMODE = 'kill'
+            }
         }
         return hitInfo
     }

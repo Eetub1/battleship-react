@@ -69,7 +69,7 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
         setConfirmPlacementVisible(false)
         //we clear the board of already placed ships by creating a new board object
         //that is the same size as the previous
-        setPlayerBoardObject(new Gameboard(playerBoardObject.size))
+        setPlayerBoardObject(new Gameboard(playerBoardObject.size, 'player'))
         playerBoardObject.setShips(ships)
         setCurrentShipIndex(0)
     }
