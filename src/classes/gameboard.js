@@ -17,6 +17,8 @@ class Gameboard {
         }
         //artificial intelligence mode, either 'hunt' or 'kill
         this.AIMODE = 'hunt'
+        //tells how many times the playerboard has been hit
+        this.howManyHits = 0
     }
 
     CONSTANTS = {
@@ -113,12 +115,10 @@ class Gameboard {
 
     calculateSmartResponse() {
         if (this.AIMODE === 'hunt') {
-            //make this use the bias to center function when ready
-            //this.calculateRandomResponse()
-            this.calculateRandomResponseBiasCenter()
+            if (this.howManyHits > 16) {
+                this.calculateRandomResponse()
+            } else this.calculateRandomResponseBiasCenter()
         } else {
-            //remember to put the mode back to hunt after done
-            //this could be divided to 2 further modes: just 'kill' and 'strikeInDirection'
             //kill looks at directions one after another
             //after the correct direction is found, we continue striking
             if (this.AIMODE === 'kill') {
@@ -128,6 +128,7 @@ class Gameboard {
                 let directions = this.boardHitInfo.directions
 
                 for (const direction in directions) {
+                    
                     let testRow = row
                     let testCol = col
 
@@ -137,7 +138,7 @@ class Gameboard {
                         if (direction === 'bottom') testRow += 1
                         if (direction === 'left') testCol -= 1
                         
-                        //console.log('Kokeillaan tätä suuntaa: ', direction)
+                        console.log('Kokeillaan tätä suuntaa: ', direction)
                         //console.log(testRow, testCol)
                         const result = this.validateHit(testRow, testCol)
                         if (result.wasHit) {
@@ -156,6 +157,7 @@ class Gameboard {
                             directions[direction] = false
                         }
                     }
+                    console.log(directions)
                 }
             } else {
                 console.log('Päästiin tänne')
@@ -186,9 +188,6 @@ class Gameboard {
         }
     }
 
-    //has a bias towards the center of the board
-    //if there have been more than 20 hits then we start trying in a more random way
-    //so that we dont target the center anymore
     calculateRandomResponseBiasCenter() {
         const nums = [2,3,4,5,6,7]
         while (true) {
@@ -214,8 +213,8 @@ class Gameboard {
 
     //validates if the strike on a given square is a hit
     //then it marks the square as either hit or missed
-    //TODO refactor this method!!!!
     validateHit(row, col) {
+        console.log('Kutsuttiin argumenteilla: ', row, col)
         //console.log(row, col);
         const hitInfo = {
             wasValid: true,
@@ -232,8 +231,10 @@ class Gameboard {
             hitInfo.message = 'Not a valid square!'
             return hitInfo
         } else if (this.board[row][col] === this.CONSTANTS.EMPTY) {
+            this.howManyHits += 1
             this.board[row][col] = this.CONSTANTS.MISS
         } else {
+            this.howManyHits += 1
             hitInfo.wasHit = true
             hitInfo.shipInfo = this.markHit(row, col)
             this.board[row][col] = this.CONSTANTS.HIT
