@@ -15,6 +15,8 @@ function App() {
     const [playerName, setPlayerName] = useState('')
     const [playerBoardObject, setPlayerBoardObject] = useState(() => new Gameboard(BOARDSIZE))
 
+    const [computerIntelligence, setComputerIntelligence] = useState('dumb')
+
     const renderPhase = () => {
         switch (gamePhase) {
             case 'beginPhase':
@@ -32,7 +34,9 @@ function App() {
                         playerBoardObject={playerBoardObject}
                         playerName={playerName}
                         setGamePhase={setGamePhase}
-                        boardSize={BOARDSIZE}/>
+                        boardSize={BOARDSIZE}
+                        computerIntelligence={computerIntelligence}
+                        setComputerIntelligence={setComputerIntelligence}/>
                 )
             default:
                 return <div>Something went wrong with setting state</div>
@@ -41,7 +45,9 @@ function App() {
 
     return (
         <>
-            <Header />
+            <Header 
+                computerIntelligence={computerIntelligence} 
+                setComputerIntelligence={setComputerIntelligence} />
             {renderPhase()}
             <Footer />
         </>

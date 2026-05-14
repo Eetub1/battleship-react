@@ -1,7 +1,7 @@
 import { Modal, Button } from 'react-bootstrap'
 import { useState } from 'react'
 
-const Header = () => {
+const Header = ({ computerIntelligence, setComputerIntelligence }) => {
     const [show, setShow] = useState(false)
     const handleShow = () => {setShow(true)}
     const handleClose = () => {setShow(false)}
@@ -9,6 +9,9 @@ const Header = () => {
     return (
         <div style={{minHeight: '70px'}} className='d-flex align-items-center text-white bg-dark'>
             <Button className='ms-3' variant='secondary' onClick={handleShow}>Info</Button>
+            <Button className='ms-3' variant='secondary' onClick={() => setComputerIntelligence(computerIntelligence === 'dumb' ? 'smart' : 'dumb')}>Difficulty</Button>
+
+            <p style={{"margin": "0 1rem"}}>Difficulty: {computerIntelligence}</p>
 
             <Modal
                 show={show}
