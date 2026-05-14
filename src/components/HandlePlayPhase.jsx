@@ -27,6 +27,8 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
     }
 
     const handleNewGame = () => {
+        playerBoardObject.resetBoard()
+        computerBoardObject.resetBoard()
         setGamePhase('placePhase')
     }
 
@@ -39,7 +41,7 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
             setMessage(`Your turn, ${playerName}...`)
             setIsComputerTurn(false)
             checkIfGameOver()
-        }, (Math.random() + 1) * 1000)  
+        }, (Math.random() + 1) * 100)  
     }
 
     const handleComputerBoardClick = (rowIndex, cellIndex) => {
