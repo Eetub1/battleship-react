@@ -55,10 +55,10 @@ class Gameboard {
     }
 
     checkIfAllShipsSunk() {
+        console.log("laivat: ", this.ships)
         for (const ship of this.ships) {
             if (!ship.isSunk) return false 
         }
-        //console.log('Kaikki laivat upotettu', this.ships)
         return true
     }
 
@@ -100,8 +100,6 @@ class Gameboard {
     }
 
     placeShipsRandomly(ships) {
-        console.log("Tultiin gameboard luokkaan")
-        
         const newBoardObject = new Gameboard(this.size, this.type)
         newBoardObject.ships = ships
 
@@ -114,6 +112,20 @@ class Gameboard {
             }
         }
         return newBoardObject
+    }
+
+    //slightly different version of placeShipsRandomly that is used for computer board
+    //doesn't return anything because we directly modify the computer board object instead of creating a new one
+    placeShipsRandomlyComputer(ships) {
+
+        for (const ship of ships) {
+            while (true) {
+                let randomRow = Math.floor(Math.random() * this.size)
+                let randomCol = Math.floor(Math.random() * this.size)
+                let orientation = Math.random() > 0.5 ? true : false
+                if (this.placeShip(randomRow, randomCol, orientation, ship)) break
+            }
+        }
     }
 
     calculateSmartResponse() {

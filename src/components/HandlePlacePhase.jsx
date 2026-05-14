@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 import DrawShipPlacementBoard from './DrawShipPlacementBoard'
 
@@ -6,7 +6,10 @@ import Gameboard from '../classes/gameboard'
 import createDefaultShips from '../utils/createDefaultShips'
 
 const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhase}) => {
-    const ships = useMemo(() => createDefaultShips(), []);
+    const ships = useMemo(() => createDefaultShips(), [])
+    useEffect(() => {
+        playerBoardObject.setShips(ships)
+    })
     
     const [currentShipIndex, setCurrentShipIndex] = useState(0)
     const currentShip = ships[currentShipIndex]
@@ -15,8 +18,7 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
     const [highlightedCells, setHighlightedCells] = useState([])
     const [isValidPlacement, setIsValidPlacement] = useState(null)
     const [confirmPlacementVisible, setConfirmPlacementVisible] = useState(false)
-    //this variable tracks if random placement button has been pressed so you cant put ships manually
-    const [isShipRandomPlacement, setIsShipRandomPlacement] = useState(false) 
+    const [isShipRandomPlacement, setIsShipRandomPlacement] = useState(false) // tracks if random placement button has been pressed so you cant put ships manually
 
     const shipAmount = ships.length
     const board = playerBoardObject.getBoard()
@@ -54,7 +56,6 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
 
     const handleRandomPlacement = () => {
         setIsShipRandomPlacement(true)
-        console.log("Laitetaan laivat randomisti")
         const newBoard = playerBoardObject.placeShipsRandomly(ships)
         newBoard.setShips(ships)
         setPlayerBoardObject(newBoard)
@@ -65,8 +66,9 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
         setIsShipRandomPlacement(false)
         setConfirmPlacementVisible(false)
         //we clear the board of already placed ships by creating a new board object that is the same size as the previous
-        setPlayerBoardObject(new Gameboard(playerBoardObject.size, 'player'))
-        playerBoardObject.setShips(ships)
+        const newBoard = new Gameboard(playerBoardObject.size, 'player')
+        newBoard.setShips(ships)
+        setPlayerBoardObject(newBoard)
         setCurrentShipIndex(0)
     }
 

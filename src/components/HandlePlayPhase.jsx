@@ -16,7 +16,7 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
         const computerBoardObject = new Gameboard(boardSize, 'computer')
         const computerShips = createDefaultShips()
         computerBoardObject.setShips(computerShips)
-        computerBoardObject.placeShipsRandomly(computerShips)
+        computerBoardObject.placeShipsRandomlyComputer(computerShips)
         return computerBoardObject
     }, [boardSize])
 
