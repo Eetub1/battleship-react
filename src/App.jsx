@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import Gameboard from './classes/gameboard'
 
-import HandlePlacePhase from './components/handlePlacePhase'
+import HandlePlacePhase from './components/HandlePlacePhase'
 import HandlePlayPhase from './components/HandlePlayPhase'
 import NameForm from './components/NameForm'
 import Footer from './components/Footer'
@@ -11,7 +11,7 @@ import Header from './components/Header'
 const BOARDSIZE = 10
 
 function App() {
-    const [gamePhase, setGamePhase] = useState('placePhase')
+    const [gamePhase, setGamePhase] = useState('beginPhase')
     const [playerName, setPlayerName] = useState('')
     const [playerBoardObject, setPlayerBoardObject] = useState(() => new Gameboard(BOARDSIZE))
 

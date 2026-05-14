@@ -6,12 +6,7 @@ import Gameboard from '../classes/gameboard'
 import createDefaultShips from '../utils/createDefaultShips'
 
 const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhase}) => {
-    const ships = useMemo(() => {
-        const ships = createDefaultShips()
-        playerBoardObject.resetBoard()
-        playerBoardObject.ships = ships
-        return ships
-    }, [playerBoardObject])
+    const ships = useMemo(() => createDefaultShips(), []);
     
     const [currentShipIndex, setCurrentShipIndex] = useState(0)
     const currentShip = ships[currentShipIndex]
@@ -45,7 +40,6 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
         setHighlightedCells([])
         const cells = []
 
-        //could these loops be combined?
         if (isHorizontal) {
             for (let i = cellIndex; i < cellIndex + shipLength; i++) {
                 cells.push([rowIndex, i])
@@ -60,15 +54,17 @@ const HandlePlacePhase = ({ playerBoardObject, setPlayerBoardObject, setGamePhas
 
     const handleRandomPlacement = () => {
         setIsShipRandomPlacement(true)
-        playerBoardObject.placeShipsRandomly(ships)
+        console.log("Laitetaan laivat randomisti")
+        const newBoard = playerBoardObject.placeShipsRandomly(ships)
+        newBoard.setShips(ships)
+        setPlayerBoardObject(newBoard)
         setConfirmPlacementVisible(true)
     }
 
     const placeShipsManually = () => {
         setIsShipRandomPlacement(false)
         setConfirmPlacementVisible(false)
-        //we clear the board of already placed ships by creating a new board object
-        //that is the same size as the previous
+        //we clear the board of already placed ships by creating a new board object that is the same size as the previous
         setPlayerBoardObject(new Gameboard(playerBoardObject.size, 'player'))
         playerBoardObject.setShips(ships)
         setCurrentShipIndex(0)

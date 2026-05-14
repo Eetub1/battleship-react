@@ -87,7 +87,6 @@ class Gameboard {
 
         if (!this.validatePlacement(row, col, isHorizontal, shipLength)) return false
 
-        //these two if branches could probably be connected with a little trickery
         if (isHorizontal) {
             for (let i = col; i < col + shipLength; i++) {
                 this.board[row][i] = shipMarker
@@ -101,16 +100,20 @@ class Gameboard {
     }
 
     placeShipsRandomly(ships) {
-        //clearing the board of all previously placed ships
-        this.board = this.setBoard()
+        console.log("Tultiin gameboard luokkaan")
+        
+        const newBoardObject = new Gameboard(this.size, this.type)
+        newBoardObject.ships = ships
+
         for (const ship of ships) {
             while (true) {
                 let randomRow = Math.floor(Math.random() * this.size)
                 let randomCol = Math.floor(Math.random() * this.size)
                 let orientation = Math.random() > 0.5 ? true : false
-                if (this.placeShip(randomRow, randomCol, orientation, ship)) break
+                if (newBoardObject.placeShip(randomRow, randomCol, orientation, ship)) break
             }
         }
+        return newBoardObject
     }
 
     calculateSmartResponse() {
