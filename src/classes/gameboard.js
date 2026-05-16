@@ -1,3 +1,5 @@
+import CONSTANTS from "../utils/constants"
+
 class Gameboard {
     constructor(size=10, type='player') {
         this.type = type // either 'player' or 'computer'
@@ -19,12 +21,6 @@ class Gameboard {
         this.howManyAttempts = 0 // tells how many times the playerboard has been hit
     }
 
-    CONSTANTS = {
-        EMPTY: 'o',
-        HIT: 'x',
-        MISS: 'm'
-    }
-
     getBoardSize() {return this.size}
 
     getBoard() {return this.board}
@@ -37,7 +33,7 @@ class Gameboard {
         for (let i = 0; i < this.size; i++) {
             const row = []
             for (let j = 0; j < this.size; j++) {
-                row.push(this.CONSTANTS.EMPTY)
+                row.push(CONSTANTS.EMPTY)
             }
             board.push(row)
         }
@@ -61,13 +57,13 @@ class Gameboard {
             if (col + shipLength > boardSize) return false
 
             for (let i = col; i < col + shipLength; i++) {
-                if (this.board[row][i] !== this.CONSTANTS.EMPTY) return false
+                if (this.board[row][i] !== CONSTANTS.EMPTY) return false
             }
         } else {
             if (row + shipLength > boardSize) return false
 
             for (let i = row; i < row + shipLength; i++) {
-                if (this.board[i][col] !== this.CONSTANTS.EMPTY) return false
+                if (this.board[i][col] !== CONSTANTS.EMPTY) return false
             }
         }
         return true
@@ -121,21 +117,21 @@ class Gameboard {
 
     calculateSmartResponse() {
         if (this.AIMODE === 'hunt') {
-            this.getNextHuntTarget()
+            this.huntTarget()
         } else if (this.AIMODE === 'kill') {
-            this.getNextKillTarget()
+            this.killTarget()
         } else if (this.AIMODE === 'strike') {
-            this.getNextStrikeTarget()
+            this.strikeTarget()
         }
     }
 
-    getNextHuntTarget() {
+    huntTarget() {
         if (this.howManyAttempts > 16) {
             this.calculateRandomResponse()
         } else this.calculateRandomResponseBiasCenter()
     }
 
-    getNextStrikeTarget() {
+    strikeTarget() {
         let [row, col] = this.boardHitInfo.lastHitSquare
         const direction = this.boardHitInfo.strikeDirection
 
@@ -146,7 +142,7 @@ class Gameboard {
 
         const isInsideBoard = row >= 0 && row < this.size && col >= 0 && col < this.size
         
-        if (isInsideBoard && this.board[row][col] === this.CONSTANTS.EMPTY) {
+        if (isInsideBoard && this.board[row][col] === CONSTANTS.EMPTY) {
             const result = this.validateHit(row, col)
             
             if (!result.wasHit) {
@@ -154,7 +150,7 @@ class Gameboard {
             }
         } else {
             this.AIMODE = 'kill'
-            this.getNextKillTarget()
+            this.killTarget()
         }
     }
 
@@ -172,7 +168,7 @@ class Gameboard {
             const tCol = col + dir.c
 
             if (tRow >= 0 && tRow < this.size && tCol >= 0 && tCol < this.size) {
-                if (this.board[tRow][tCol] === this.CONSTANTS.EMPTY) {
+                if (this.board[tRow][tCol] === CONSTANTS.EMPTY) {
                     this.validateHit(tRow, tCol)
                     return
                 }
@@ -220,18 +216,18 @@ class Gameboard {
             hitInfo.wasValid = false
             return hitInfo
         }
-        if (this.board[row][col] === this.CONSTANTS.HIT || this.board[row][col] === this.CONSTANTS.MISS) { // already hit this square before
+        if (this.board[row][col] === CONSTANTS.HIT || this.board[row][col] === CONSTANTS.MISS) { // already hit this square before
             hitInfo.wasValid = false
             hitInfo.message = 'Not a valid square!'
             return hitInfo
-        } else if (this.board[row][col] === this.CONSTANTS.EMPTY) { // missed the shot
+        } else if (this.board[row][col] === CONSTANTS.EMPTY) { // missed the shot
             this.howManyAttempts += 1
-            this.board[row][col] = this.CONSTANTS.MISS
+            this.board[row][col] = CONSTANTS.MISS
         } else { // else we hit a ship
             this.howManyAttempts += 1
             hitInfo.wasHit = true
             hitInfo.shipInfo = this.markHit(row, col)
-            this.board[row][col] = this.CONSTANTS.HIT
+            this.board[row][col] = CONSTANTS.HIT
             hitInfo.message = `Hit enemy ${hitInfo.shipInfo.name}!`
 
             if (this.type === 'player') {

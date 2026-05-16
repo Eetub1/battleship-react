@@ -1,11 +1,9 @@
-import constants from "../utils/constants"
-const CONSTANTS = constants()
+import CONSTANTS from "../utils/constants"
 
 const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => {
     const board = boardObject.getBoard()
 
-    //function that doesn't do anything
-    //its just there so that onClick property isn't undefined
+    //function that doesn't do anything, its just there so that onClick property isn't undefined
     const noop = () => {}
 
     return (
