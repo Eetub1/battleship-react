@@ -5,10 +5,11 @@ class Gameboard {
         this.type = type
         this.size = size
         this.board = this.setBoard()
-        this.ships = [],
+        this.ships = []
 
         this.boardHitInfo = {
             strikeDirection: null,
+            firstHitSquare: [], // TODO tää pitää pitää muistissa
             lastHitSquare: [],
             triedDirections : {
                 top: false,
@@ -194,8 +195,10 @@ class Gameboard {
         if (direction === 'left') col -= 1
 
         if (!this.isValidTarget(row, col)) {
-            this.AIMODE = AI_MODES.KILL
-            this.killTarget()
+            // nyt tä on tosi tyhmä. Pitäs olla tallessa alkuperänen kohta mihin laivaan
+            // osuttiin ekan kerran, mutta TODO myöhemmin
+            this.AIMODE = AI_MODES.HUNT
+            this.calculateRandomResponse()
             return
         }
 
