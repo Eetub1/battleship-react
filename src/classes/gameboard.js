@@ -1,8 +1,8 @@
-import CONSTANTS from "../utils/constants"
+import { CONSTANTS, AI_MODES, PLAYER_TYPES } from "../utils/constants"
 
 class Gameboard {
-    constructor(size=10, type='player') {
-        this.type = type // either 'player' or 'computer'
+    constructor(size=10, type=PLAYER_TYPES.PLAYER) {
+        this.type = type
         this.size = size
         this.board = this.setBoard()
         this.ships = [],
@@ -17,7 +17,7 @@ class Gameboard {
                 left: null
             }
         }
-        this.AIMODE = 'hunt' // AI mode, 'hunt', 'kill' or 'strike'
+        this.AIMODE = AI_MODES.HUNT // AI mode, 'hunt', 'kill' or 'strike'
         this.howManyAttempts = 0 // tells how many times the playerboard has been hit
     }
 
@@ -116,11 +116,11 @@ class Gameboard {
     }
 
     calculateSmartResponse() {
-        if (this.AIMODE === 'hunt') {
+        if (this.AIMODE === AI_MODES.HUNT) {
             this.huntTarget()
-        } else if (this.AIMODE === 'kill') {
+        } else if (this.AIMODE === AI_MODES.KILL) {
             this.killTarget()
-        } else if (this.AIMODE === 'strike') {
+        } else if (this.AIMODE === AI_MODES.STRIKE) {
             this.strikeTarget()
         }
     }
@@ -131,30 +131,11 @@ class Gameboard {
         } else this.calculateRandomResponseBiasCenter()
     }
 
-    strikeTarget() {
-        let [row, col] = this.boardHitInfo.lastHitSquare
-        const direction = this.boardHitInfo.strikeDirection
-
-        if (direction === 'top') row -= 1
-        if (direction === 'right') col += 1
-        if (direction === 'bottom') row += 1
-        if (direction === 'left') col -= 1
-
-        const isInsideBoard = row >= 0 && row < this.size && col >= 0 && col < this.size
-        
-        if (isInsideBoard && this.board[row][col] === CONSTANTS.EMPTY) {
-            const result = this.validateHit(row, col)
-            
-            if (!result.wasHit) {
-                this.AIMODE = 'kill'
-            }
-        } else {
-            this.AIMODE = 'kill'
-            this.killTarget()
-        }
-    }
-
-    getNextKillTarget() {
+    /**
+     * We come into this function if AI was previously in HUNT mode and the previous strike was a hit
+     * The purpose of this function is to determine the orientation of the ship
+     */
+    killTarget() {
         const [row, col] = this.boardHitInfo.lastHitSquare;
         const directions = [
             { r: -1, c: 0 }, // Top
@@ -177,8 +158,31 @@ class Gameboard {
 
         // 3. Fallback: If we checked all neighbors and found nowhere to shoot
         // (This happens if a ship is surrounded by misses or other ships)
-        this.AIMODE = 'hunt'
-        this.getNextHuntTarget()
+        this.AIMODE = AI_MODES.HUNT
+        this.huntTarget()
+    }
+
+    strikeTarget() {
+        let [row, col] = this.boardHitInfo.lastHitSquare
+        const direction = this.boardHitInfo.strikeDirection
+
+        if (direction === 'top') row -= 1
+        if (direction === 'right') col += 1
+        if (direction === 'bottom') row += 1
+        if (direction === 'left') col -= 1
+
+        const isInsideBoard = row >= 0 && row < this.size && col >= 0 && col < this.size
+        
+        if (isInsideBoard && this.board[row][col] === CONSTANTS.EMPTY) {
+            const result = this.validateHit(row, col)
+            
+            if (!result.wasHit) {
+                this.AIMODE = AI_MODES.KILL
+            }
+        } else {
+            this.AIMODE = AI_MODES.KILL
+            this.killTarget()
+        }
     }
 
     calculateRandomResponseBiasCenter() {
@@ -230,9 +234,9 @@ class Gameboard {
             this.board[row][col] = CONSTANTS.HIT
             hitInfo.message = `Hit enemy ${hitInfo.shipInfo.name}!`
 
-            if (this.type === 'player') {
+            if (this.type === PLAYER_TYPES.PLAYER) {
                 this.boardHitInfo.lastHitSquare = [row, col]
-                if (this.AIMODE === 'hunt') this.AIMODE = 'kill' // we hit a ship and we kill it
+                if (this.AIMODE === AI_MODES.HUNT) this.AIMODE = AI_MODES.KILL // we hit a ship and we kill it
             }
         }
         return hitInfo
