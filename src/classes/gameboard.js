@@ -91,6 +91,7 @@ class Gameboard {
         const newBoardObject = new Gameboard(this.size, this.type)
         newBoardObject.ships = ships
 
+        // this could take a really long time if we have alot of ships or the board is small, but since we have a small board and only 5 ships it should be fine
         for (const ship of ships) {
             while (true) {
                 let randomRow = Math.floor(Math.random() * this.size)
@@ -150,7 +151,7 @@ class Gameboard {
 
             if (tRow >= 0 && tRow < this.size && tCol >= 0 && tCol < this.size) {
                 if (this.board[tRow][tCol] === CONSTANTS.EMPTY) {
-                    this.validateHit(tRow, tCol)
+                    this.processBoardClick(tRow, tCol)
                     return
                 }
             }
@@ -174,7 +175,7 @@ class Gameboard {
         const isInsideBoard = row >= 0 && row < this.size && col >= 0 && col < this.size
         
         if (isInsideBoard && this.board[row][col] === CONSTANTS.EMPTY) {
-            const result = this.validateHit(row, col)
+            const result = this.processBoardClick(row, col)
             
             if (!result.wasHit) {
                 this.AIMODE = AI_MODES.KILL
@@ -190,7 +191,7 @@ class Gameboard {
         while (true) {
             let randomRow = nums[Math.floor(Math.random() * nums.length)]
             let randomCol = nums[Math.floor(Math.random() * nums.length)]
-            if (this.validateHit(randomRow, randomCol).wasValid) break
+            if (this.processBoardClick(randomRow, randomCol).wasValid) break
         }
     }
 
@@ -198,48 +199,85 @@ class Gameboard {
         while (true) {
             let randomRow = Math.floor(Math.random() * this.size)
             let randomCol = Math.floor(Math.random() * this.size)
-            if (this.validateHit(randomRow, randomCol).wasValid) break
+            if (this.processBoardClick(randomRow, randomCol).wasValid) break
         }
     }
 
+    /**
+     * Marks a hit on the hit ship
+     */
     markHit(row, col) {
         const hitShip = this.ships.find(ship => ship.marker === this.board[row][col])
         const shipInfo = hitShip.markHitOnShip()
         return shipInfo
     }
 
-    //validates if the strike on a given square is a hit and then mark the square as either hit or missed
-    validateHit(row, col) {
-        const hitInfo = {
-            wasValid: true,
-            wasHit: false,
-            message: 'You missed!'
+    /**
+     * CHecks if the strike is in bounds of the board and the square hasn't already been hit before 
+     */
+    isValidTarget(row, col) {
+        if (row < 0 || col < 0 || row >= this.size || col >= this.size) {
+            return false;
         }
 
-        if (row < 0 || col < 0 || row >= this.size || col >= this.size) { // coordinates are out of bounds
-            hitInfo.wasValid = false
-            return hitInfo
+        if (this.board[row][col] === CONSTANTS.HIT || this.board[row][col] === CONSTANTS.MISS) {
+            return false;
         }
-        if (this.board[row][col] === CONSTANTS.HIT || this.board[row][col] === CONSTANTS.MISS) { // already hit this square before
-            hitInfo.wasValid = false
-            hitInfo.message = 'Not a valid square!'
-            return hitInfo
-        } else if (this.board[row][col] === CONSTANTS.EMPTY) { // missed the shot
-            this.howManyAttempts += 1
-            this.board[row][col] = CONSTANTS.MISS
-        } else { // else we hit a ship
-            this.howManyAttempts += 1
-            hitInfo.wasHit = true
-            hitInfo.shipInfo = this.markHit(row, col)
-            this.board[row][col] = CONSTANTS.HIT
-            hitInfo.message = `Hit enemy ${hitInfo.shipInfo.name}!`
+        return true;
+    }
 
-            if (this.type === PLAYER_TYPES.PLAYER) {
-                this.boardHitInfo.lastHitSquare = [row, col]
-                if (this.AIMODE === AI_MODES.HUNT) this.AIMODE = AI_MODES.KILL // we hit a ship and we kill it
+    /**
+     * Executes a strike on the given coordinates. Assumes that the coordinates are valid
+     * Use isValidTarget function to check if the strike is valid before calling this function :) 
+     */
+    executeStrike(row, col) {
+        this.howManyAttempts += 1;
+
+        if (this.board[row][col] === CONSTANTS.EMPTY) {
+            this.board[row][col] = CONSTANTS.MISS;
+            return { wasHit: false, message: 'You missed!' };
+        }
+
+        const shipInfo = this.markHit(row, col);
+        this.board[row][col] = CONSTANTS.HIT;
+        
+        return { 
+            wasHit: true, 
+            shipInfo: shipInfo, 
+            message: `Hit enemy ${shipInfo.name}!` 
+        };
+    }
+
+    updateAIState(row, col, wasHit, isSunk) {
+        if (this.type !== PLAYER_TYPES.PLAYER) return; // we only track shots on a human player
+
+        if (wasHit) {
+            if (isSunk) {
+                this.AIMODE = AI_MODES.HUNT;
+                this.boardHitInfo.lastHitSquare = [];
+            } else {
+                this.boardHitInfo.lastHitSquare = [row, col];
+                if (this.AIMODE === AI_MODES.HUNT) {
+                    this.AIMODE = AI_MODES.KILL;
+                }
             }
         }
-        return hitInfo
+    }
+
+    processBoardClick(row, col) {
+        if (!this.isValidTarget(row, col)) {
+            return { wasValid: false, message: 'Not a valid square!' };
+        }
+
+        const result = this.executeStrike(row, col);
+
+        const isSunk = result.wasHit ? result.shipInfo.isSunk : false;
+        this.updateAIState(row, col, result.wasHit, isSunk);
+
+        return {
+            wasValid: true,
+            ...result
+        };
     }
 }
 

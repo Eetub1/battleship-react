@@ -41,16 +41,16 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
             setMessage(`Your turn, ${playerName}...`)
             setIsComputerTurn(false)
             checkIfGameOver()
-        }, (Math.random() + 1) * 1000) // random delay to make the computer seem more human 
+        }, (Math.random() + 1) * 100) // random delay to make the computer seem more human 
     }
 
     const handleComputerBoardClick = (rowIndex, cellIndex) => {
         if (isGameOver || isComputerTurn) return
 
-        const hitInfo = computerBoardObject.validateHit(rowIndex, cellIndex)
+        const hitInfo = computerBoardObject.processBoardClick(rowIndex, cellIndex)
         setHitMessage(hitInfo.message)
         setTimeout(() => setHitMessage(''), 1000)
-        if (!hitInfo.wasValid) return
+        if (!hitInfo.wasValid) return // we change turn only when the player clicks a valid square
         setIsComputerTurn(true)
         computerMove()
     }
