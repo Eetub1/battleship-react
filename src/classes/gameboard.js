@@ -8,13 +8,13 @@ class Gameboard {
         this.ships = [],
 
         this.boardHitInfo = {
-            strikeDirection: 'none',
+            strikeDirection: null,
             lastHitSquare: [],
             triedDirections : {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null
+                top: false,
+                right: false,
+                bottom: false,
+                left: false
             }
         }
         this.AIMODE = AI_MODES.HUNT // AI mode, 'hunt', 'kill' or 'strike'
@@ -43,7 +43,7 @@ class Gameboard {
     resetBoard() {this.board = this.setBoard()}
 
     checkIfAllShipsSunk() {
-        console.log("laivat: ", this.ships)
+        //console.log("laivat: ", this.ships)
         for (const ship of this.ships) {
             if (!ship.isSunk) return false 
         }
@@ -116,6 +116,25 @@ class Gameboard {
         }
     }
 
+    calculateRandomResponseBiasCenter() {
+
+        const nums = [2,3,4,5,6,7]
+        while (true) {
+            let randomRow = nums[Math.floor(Math.random() * nums.length)]
+            let randomCol = nums[Math.floor(Math.random() * nums.length)]
+            if (this.processBoardStrike(randomRow, randomCol).wasValid) break
+        }
+    }
+
+    calculateRandomResponse() {
+
+        while (true) {
+            let randomRow = Math.floor(Math.random() * this.size)
+            let randomCol = Math.floor(Math.random() * this.size)
+            if (this.processBoardStrike(randomRow, randomCol).wasValid) break
+        }
+    }
+
     calculateSmartResponse() {
         if (this.AIMODE === AI_MODES.HUNT) {
             this.huntTarget()
@@ -137,30 +156,32 @@ class Gameboard {
      * The purpose of this function is to determine the orientation of the ship
      */
     killTarget() {
-        const [row, col] = this.boardHitInfo.lastHitSquare;
-        const directions = [
-            { r: -1, c: 0 }, // Top
-            { r: 0, c: 1 },  // Right
-            { r: 1, c: 0 },  // Bottom
-            { r: 0, c: -1 }  // Left
-        ];
-
-        for (const dir of directions) {
-            const tRow = row + dir.r
-            const tCol = col + dir.c
-
-            if (tRow >= 0 && tRow < this.size && tCol >= 0 && tCol < this.size) {
-                if (this.board[tRow][tCol] === CONSTANTS.EMPTY) {
-                    this.processBoardClick(tRow, tCol)
-                    return
-                }
-            }
+        const hitInfo = this.boardHitInfo
+        const [row, col] = hitInfo.lastHitSquare
+        const directions = {
+            'top': { row: -1, col: 0 },
+            'right': { row: 0, col: 1 },
+            'bottom': { row: 1, col: 0 },
+            'left': { row: 0, col: -1 }
         }
 
-        // 3. Fallback: If we checked all neighbors and found nowhere to shoot
-        // (This happens if a ship is surrounded by misses or other ships)
-        this.AIMODE = AI_MODES.HUNT
-        this.huntTarget()
+        for (const [direction, tried] of Object.entries(hitInfo.triedDirections)) {
+            if (tried) continue
+
+            const newRow = row + directions[direction].row
+            const newCol = col + directions[direction].col
+
+            if (!this.isValidTarget(newRow, newCol)) {
+                hitInfo.triedDirections[direction] = true
+                continue
+            }
+
+            //else we found a valid square in current direction
+            hitInfo.triedDirections[direction] = true
+            const result = this.executeStrike(newRow, newCol)
+            this.updateAIState(newRow, newCol, result, direction)
+            return
+        }
     }
 
     strikeTarget() {
@@ -172,35 +193,14 @@ class Gameboard {
         if (direction === 'bottom') row += 1
         if (direction === 'left') col -= 1
 
-        const isInsideBoard = row >= 0 && row < this.size && col >= 0 && col < this.size
-        
-        if (isInsideBoard && this.board[row][col] === CONSTANTS.EMPTY) {
-            const result = this.processBoardClick(row, col)
-            
-            if (!result.wasHit) {
-                this.AIMODE = AI_MODES.KILL
-            }
-        } else {
+        if (!this.isValidTarget(row, col)) {
             this.AIMODE = AI_MODES.KILL
             this.killTarget()
+            return
         }
-    }
 
-    calculateRandomResponseBiasCenter() {
-        const nums = [2,3,4,5,6,7]
-        while (true) {
-            let randomRow = nums[Math.floor(Math.random() * nums.length)]
-            let randomCol = nums[Math.floor(Math.random() * nums.length)]
-            if (this.processBoardClick(randomRow, randomCol).wasValid) break
-        }
-    }
-
-    calculateRandomResponse() {
-        while (true) {
-            let randomRow = Math.floor(Math.random() * this.size)
-            let randomCol = Math.floor(Math.random() * this.size)
-            if (this.processBoardClick(randomRow, randomCol).wasValid) break
-        }
+        const result = this.executeStrike(row, col)
+        this.updateAIState(row, col, result)
     }
 
     /**
@@ -217,13 +217,13 @@ class Gameboard {
      */
     isValidTarget(row, col) {
         if (row < 0 || col < 0 || row >= this.size || col >= this.size) {
-            return false;
+            return false
         }
 
         if (this.board[row][col] === CONSTANTS.HIT || this.board[row][col] === CONSTANTS.MISS) {
-            return false;
+            return false
         }
-        return true;
+        return true
     }
 
     /**
@@ -231,15 +231,15 @@ class Gameboard {
      * Use isValidTarget function to check if the strike is valid before calling this function :) 
      */
     executeStrike(row, col) {
-        this.howManyAttempts += 1;
+        this.howManyAttempts += 1
 
         if (this.board[row][col] === CONSTANTS.EMPTY) {
-            this.board[row][col] = CONSTANTS.MISS;
-            return { wasHit: false, message: 'You missed!' };
+            this.board[row][col] = CONSTANTS.MISS
+            return { wasHit: false, message: 'You missed!' }
         }
 
         const shipInfo = this.markHit(row, col);
-        this.board[row][col] = CONSTANTS.HIT;
+        this.board[row][col] = CONSTANTS.HIT
         
         return { 
             wasHit: true, 
@@ -248,36 +248,46 @@ class Gameboard {
         };
     }
 
-    updateAIState(row, col, wasHit, isSunk) {
-        if (this.type !== PLAYER_TYPES.PLAYER) return; // we only track shots on a human player
+    updateAIState(row, col, result, strikeDirection=null) {
+        const isSunk = result.wasHit ? result.shipInfo.isSunk : false
+        if (this.type !== PLAYER_TYPES.PLAYER) return // we only track shots on a human player
 
-        if (wasHit) {
+        if (result.wasHit) {
             if (isSunk) {
-                this.AIMODE = AI_MODES.HUNT;
-                this.boardHitInfo.lastHitSquare = [];
+                // if we sunk the ship, then we go back to hunting ships
+                this.AIMODE = AI_MODES.HUNT
+                this.boardHitInfo.lastHitSquare = []
             } else {
-                this.boardHitInfo.lastHitSquare = [row, col];
+                this.boardHitInfo.lastHitSquare = [row, col]
                 if (this.AIMODE === AI_MODES.HUNT) {
-                    this.AIMODE = AI_MODES.KILL;
+                    this.AIMODE = AI_MODES.KILL
+                } else if (this.AIMODE === AI_MODES.KILL) {
+                    this.AIMODE = AI_MODES.STRIKE
+                    this.boardHitInfo.strikeDirection = strikeDirection
                 }
             }
         }
     }
 
-    processBoardClick(row, col) {
+    processBoardStrike(row, col) {
         if (!this.isValidTarget(row, col)) {
-            return { wasValid: false, message: 'Not a valid square!' };
+            return { wasValid: false, message: 'Not a valid square!' }
         }
 
-        const result = this.executeStrike(row, col);
+        const result = this.executeStrike(row, col)
 
-        const isSunk = result.wasHit ? result.shipInfo.isSunk : false;
-        this.updateAIState(row, col, result.wasHit, isSunk);
+        this.updateAIState(row, col, result)
+
+        console.log("Ollaan valitsemassa tietokoneen seuraavaa kohdetta")
+        console.log("Mikä on tekoälyn mode nyt: ", this.AIMODE)
+        console.log("Isku info objekti: ", this.boardHitInfo)
+        console.log("Montako yritystä mennyt: ", this.howManyAttempts)
+        console.log(" ")
 
         return {
             wasValid: true,
             ...result
-        };
+        }
     }
 }
 

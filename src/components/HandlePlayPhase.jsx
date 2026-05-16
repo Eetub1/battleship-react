@@ -47,7 +47,7 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
     const handleComputerBoardClick = (rowIndex, cellIndex) => {
         if (isGameOver || isComputerTurn) return
 
-        const hitInfo = computerBoardObject.processBoardClick(rowIndex, cellIndex)
+        const hitInfo = computerBoardObject.processBoardStrike(rowIndex, cellIndex)
         setHitMessage(hitInfo.message)
         setTimeout(() => setHitMessage(''), 1000)
         if (!hitInfo.wasValid) return // we change turn only when the player clicks a valid square
