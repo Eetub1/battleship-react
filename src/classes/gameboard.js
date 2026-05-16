@@ -118,7 +118,6 @@ class Gameboard {
     }
 
     calculateRandomResponseBiasCenter() {
-
         const nums = [2,3,4,5,6,7]
         while (true) {
             let randomRow = nums[Math.floor(Math.random() * nums.length)]
@@ -128,7 +127,6 @@ class Gameboard {
     }
 
     calculateRandomResponse() {
-
         while (true) {
             let randomRow = Math.floor(Math.random() * this.size)
             let randomCol = Math.floor(Math.random() * this.size)
@@ -188,22 +186,34 @@ class Gameboard {
     strikeTarget() {
         let [row, col] = this.boardHitInfo.lastHitSquare
         const direction = this.boardHitInfo.strikeDirection
+        let newRow = row
+        let newCol = col
 
-        if (direction === 'top') row -= 1
-        if (direction === 'right') col += 1
-        if (direction === 'bottom') row += 1
-        if (direction === 'left') col -= 1
+        if (direction === 'top') newRow -= 1
+        if (direction === 'right') newCol += 1
+        if (direction === 'bottom') newRow += 1
+        if (direction === 'left') newCol -= 1
 
-        if (!this.isValidTarget(row, col)) {
-            // nyt tä on tosi tyhmä. Pitäs olla tallessa alkuperänen kohta mihin laivaan
-            // osuttiin ekan kerran, mutta TODO myöhemmin
-            this.AIMODE = AI_MODES.HUNT
-            this.calculateRandomResponse()
-            return
+        if (!this.isValidTarget(newRow, newCol)) {
+            if (this.boardHitInfo.strikeDirection === 'top') this.boardHitInfo.strikeDirection = 'bottom'
+            else if (this.boardHitInfo.strikeDirection === 'right') this.boardHitInfo.strikeDirection = 'left'
+            else if (this.boardHitInfo.strikeDirection === 'bottom') this.boardHitInfo.strikeDirection = 'top'
+            else if (this.boardHitInfo.strikeDirection === 'left') this.boardHitInfo.strikeDirection = 'right'
+            this.boardHitInfo.lastHitSquare = this.boardHitInfo.firstHitSquare
+            this.strikeTarget()
         }
 
-        const result = this.executeStrike(row, col)
-        this.updateAIState(row, col, result)
+        const result = this.executeStrike(newRow, newCol)
+
+        if (!result.wasHit) {
+            // if we missed, we try the opposite direction
+            if (this.boardHitInfo.strikeDirection === 'top') this.boardHitInfo.strikeDirection = 'bottom'
+            else if (this.boardHitInfo.strikeDirection === 'right') this.boardHitInfo.strikeDirection = 'left'
+            else if (this.boardHitInfo.strikeDirection === 'bottom') this.boardHitInfo.strikeDirection = 'top'
+            else if (this.boardHitInfo.strikeDirection === 'left') this.boardHitInfo.strikeDirection = 'right'
+            this.boardHitInfo.lastHitSquare = this.boardHitInfo.firstHitSquare
+        }
+        this.updateAIState(newRow, newCol, result)
     }
 
     /**
@@ -238,7 +248,14 @@ class Gameboard {
 
         if (this.board[row][col] === CONSTANTS.EMPTY) {
             this.board[row][col] = CONSTANTS.MISS
-            return { wasHit: false, message: 'You missed!' }
+            return { 
+                wasHit: false, 
+                message: 'You missed!',
+                shipInfo: {
+                    name: null,
+                    wasSunk: false
+                }
+            }
         }
 
         const shipInfo = this.markHit(row, col);
@@ -252,17 +269,32 @@ class Gameboard {
     }
 
     updateAIState(row, col, result, strikeDirection=null) {
-        const isSunk = result.wasHit ? result.shipInfo.isSunk : false
         if (this.type !== PLAYER_TYPES.PLAYER) return // we only track shots on a human player
 
+        const isSunk = result.wasHit ? result.shipInfo.wasSunk : false
+
+        console.log("Mikä on tekoälyn mode: ", this.AIMODE)
+        console.log("Isku info objekti: ", this.boardHitInfo)
+        console.log("Montako yritystä mennyt: ", this.howManyAttempts)
+        console.log("Result objekti: ", result)
+        console.log("=========================")
         if (result.wasHit) {
             if (isSunk) {
                 // if we sunk the ship, then we go back to hunting ships
                 this.AIMODE = AI_MODES.HUNT
                 this.boardHitInfo.lastHitSquare = []
+                this.boardHitInfo.firstHitSquare = []
+                this.boardHitInfo.strikeDirection = null
+                this.boardHitInfo.triedDirections = {
+                    top: false,
+                    right: false,
+                    bottom: false,
+                    left: false
+                }
             } else {
                 this.boardHitInfo.lastHitSquare = [row, col]
                 if (this.AIMODE === AI_MODES.HUNT) {
+                    this.boardHitInfo.firstHitSquare = [row, col]
                     this.AIMODE = AI_MODES.KILL
                 } else if (this.AIMODE === AI_MODES.KILL) {
                     this.AIMODE = AI_MODES.STRIKE
@@ -270,22 +302,28 @@ class Gameboard {
                 }
             }
         }
+
+        console.log("Mikä on tekoälyn mode nyt: ", this.AIMODE)
+        console.log("Isku info objekti nyt: ", this.boardHitInfo)
+        console.log(" ")
     }
 
     processBoardStrike(row, col) {
         if (!this.isValidTarget(row, col)) {
-            return { wasValid: false, message: 'Not a valid square!' }
+            return { 
+                wasValid: false, 
+                message: 'Not a valid square!',
+                shipInfo:{
+                    name: null,
+                    wasSunk: false
+                }
+            }
         }
 
         const result = this.executeStrike(row, col)
 
-        this.updateAIState(row, col, result)
-
-        console.log("Ollaan valitsemassa tietokoneen seuraavaa kohdetta")
-        console.log("Mikä on tekoälyn mode nyt: ", this.AIMODE)
-        console.log("Isku info objekti: ", this.boardHitInfo)
-        console.log("Montako yritystä mennyt: ", this.howManyAttempts)
-        console.log(" ")
+        // If we are processing a strike on the player board, we need to update AI state
+        if (this.type === PLAYER_TYPES.PLAYER) {this.updateAIState(row, col, result)}
 
         return {
             wasValid: true,
