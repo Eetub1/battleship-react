@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../utils/constants"
+import { CONSTANTS } from '../utils/constants'
 
 const DrawShipPlacementBoard = ({
     board,

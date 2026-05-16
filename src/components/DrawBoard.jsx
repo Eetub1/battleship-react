@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../utils/constants"
+import { CONSTANTS } from '../utils/constants'
 
 const DrawBoard = ({boardObject, isComputerBoard, handleComputerBoardClick}) => {
     const board = boardObject.getBoard()

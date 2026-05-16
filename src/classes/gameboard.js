@@ -1,4 +1,4 @@
-import { CONSTANTS, AI_MODES, PLAYER_TYPES } from "../utils/constants"
+import { CONSTANTS, AI_MODES, PLAYER_TYPES } from '../utils/constants'
 
 class Gameboard {
     constructor(size=10, type=PLAYER_TYPES.PLAYER) {
@@ -122,7 +122,8 @@ class Gameboard {
         while (true) {
             let randomRow = nums[Math.floor(Math.random() * nums.length)]
             let randomCol = nums[Math.floor(Math.random() * nums.length)]
-            if (this.processBoardStrike(randomRow, randomCol).wasValid) break
+            const result = this.processBoardStrike(randomRow, randomCol)
+            if (result.wasValid) return result
         }
     }
 
@@ -130,7 +131,8 @@ class Gameboard {
         while (true) {
             let randomRow = Math.floor(Math.random() * this.size)
             let randomCol = Math.floor(Math.random() * this.size)
-            if (this.processBoardStrike(randomRow, randomCol).wasValid) break
+            const result = this.processBoardStrike(randomRow, randomCol)
+            if (result.wasValid) return result
         }
     }
 
@@ -226,7 +228,7 @@ class Gameboard {
     }
 
     /**
-     * CHecks if the strike is in bounds of the board and the square hasn't already been hit before 
+     * Checks if the strike is in bounds of the board and the square hasn't already been hit before 
      */
     isValidTarget(row, col) {
         if (row < 0 || col < 0 || row >= this.size || col >= this.size) {
@@ -250,7 +252,7 @@ class Gameboard {
             this.board[row][col] = CONSTANTS.MISS
             return { 
                 wasHit: false, 
-                message: 'You missed!',
+                message: this.type === PLAYER_TYPES.COMPUTER ? 'You missed!' : 'Computer missed!',
                 shipInfo: {
                     name: null,
                     wasSunk: false
@@ -258,14 +260,14 @@ class Gameboard {
             }
         }
 
-        const shipInfo = this.markHit(row, col);
+        const shipInfo = this.markHit(row, col)
         this.board[row][col] = CONSTANTS.HIT
         
         return { 
             wasHit: true, 
             shipInfo: shipInfo, 
-            message: `Hit enemy ${shipInfo.name}!` 
-        };
+            message: this.type === PLAYER_TYPES.COMPUTER ? `Hit enemy ${shipInfo.name}!` : `Computer hit your ${shipInfo.name}!`
+        }
     }
 
     updateAIState(row, col, result, strikeDirection=null) {
@@ -273,11 +275,11 @@ class Gameboard {
 
         const isSunk = result.wasHit ? result.shipInfo.wasSunk : false
 
-        console.log("Mikä on tekoälyn mode: ", this.AIMODE)
-        console.log("Isku info objekti: ", this.boardHitInfo)
-        console.log("Montako yritystä mennyt: ", this.howManyAttempts)
-        console.log("Result objekti: ", result)
-        console.log("=========================")
+        console.log('Mikä on tekoälyn mode: ', this.AIMODE)
+        console.log('Isku info objekti: ', this.boardHitInfo)
+        console.log('Montako yritystä mennyt: ', this.howManyAttempts)
+        console.log('Result objekti: ', result)
+        console.log('=========================')
         if (result.wasHit) {
             if (isSunk) {
                 // if we sunk the ship, then we go back to hunting ships
@@ -303,16 +305,16 @@ class Gameboard {
             }
         }
 
-        console.log("Mikä on tekoälyn mode nyt: ", this.AIMODE)
-        console.log("Isku info objekti nyt: ", this.boardHitInfo)
-        console.log(" ")
+        console.log('Mikä on tekoälyn mode nyt: ', this.AIMODE)
+        console.log('Isku info objekti nyt: ', this.boardHitInfo)
+        console.log(' ')
     }
 
     processBoardStrike(row, col) {
         if (!this.isValidTarget(row, col)) {
             return { 
                 wasValid: false, 
-                message: 'Not a valid square!',
+                message: this.type === PLAYER_TYPES.COMPUTER ? 'Not a valid square!' : 'Computer selected an invalid square!',
                 shipInfo:{
                     name: null,
                     wasSunk: false
@@ -322,7 +324,6 @@ class Gameboard {
 
         const result = this.executeStrike(row, col)
 
-        // If we are processing a strike on the player board, we need to update AI state
         if (this.type === PLAYER_TYPES.PLAYER) {this.updateAIState(row, col, result)}
 
         return {

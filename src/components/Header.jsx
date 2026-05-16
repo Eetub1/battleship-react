@@ -11,7 +11,7 @@ const Header = ({ computerIntelligence, setComputerIntelligence }) => {
             <Button className='ms-3' variant='secondary' onClick={handleShow}>Info</Button>
             <Button className='ms-3' variant='secondary' onClick={() => setComputerIntelligence(computerIntelligence === 'dumb' ? 'smart' : 'dumb')}>Difficulty</Button>
 
-            <p style={{"margin": "0 1rem"}}>Difficulty: {computerIntelligence}</p>
+            <p style={{'margin': '0 1rem'}}>Difficulty: {computerIntelligence}</p>
 
             <Modal
                 show={show}
