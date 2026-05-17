@@ -6,7 +6,12 @@ class Gameboard {
         this.size = size
         this.board = this.setBoard()
         this.ships = []
-
+        this.reverseDirections = {
+            top: 'bottom',
+            right: 'left',
+            bottom: 'top',
+            left: 'right'
+        }
         this.boardHitInfo = {
             strikeDirection: null,
             firstHitSquare: [], // TODO tää pitää pitää muistissa
@@ -138,18 +143,18 @@ class Gameboard {
 
     calculateSmartResponse() {
         if (this.AIMODE === AI_MODES.HUNT) {
-            this.huntTarget()
+            return this.huntTarget()
         } else if (this.AIMODE === AI_MODES.KILL) {
-            this.killTarget()
+            return this.killTarget()
         } else if (this.AIMODE === AI_MODES.STRIKE) {
-            this.strikeTarget()
+            return this.strikeTarget()
         }
     }
 
     huntTarget() {
         if (this.howManyAttempts > 16) {
-            this.calculateRandomResponse()
-        } else this.calculateRandomResponseBiasCenter()
+            return this.calculateRandomResponse()
+        } else return this.calculateRandomResponseBiasCenter()
     }
 
     /**
@@ -181,11 +186,12 @@ class Gameboard {
             hitInfo.triedDirections[direction] = true
             const result = this.executeStrike(newRow, newCol)
             this.updateAIState(newRow, newCol, result, direction)
-            return
+            return hitInfo
         }
     }
 
     strikeTarget() {
+
         let [row, col] = this.boardHitInfo.lastHitSquare
         const direction = this.boardHitInfo.strikeDirection
         let newRow = row
@@ -197,25 +203,19 @@ class Gameboard {
         if (direction === 'left') newCol -= 1
 
         if (!this.isValidTarget(newRow, newCol)) {
-            if (this.boardHitInfo.strikeDirection === 'top') this.boardHitInfo.strikeDirection = 'bottom'
-            else if (this.boardHitInfo.strikeDirection === 'right') this.boardHitInfo.strikeDirection = 'left'
-            else if (this.boardHitInfo.strikeDirection === 'bottom') this.boardHitInfo.strikeDirection = 'top'
-            else if (this.boardHitInfo.strikeDirection === 'left') this.boardHitInfo.strikeDirection = 'right'
+            this.boardHitInfo.strikeDirection = this.reverseDirections[direction]
             this.boardHitInfo.lastHitSquare = this.boardHitInfo.firstHitSquare
-            this.strikeTarget()
+            return this.strikeTarget()
         }
 
-        const result = this.executeStrike(newRow, newCol)
+        const hitInfo = this.executeStrike(newRow, newCol)
 
-        if (!result.wasHit) {
-            // if we missed, we try the opposite direction
-            if (this.boardHitInfo.strikeDirection === 'top') this.boardHitInfo.strikeDirection = 'bottom'
-            else if (this.boardHitInfo.strikeDirection === 'right') this.boardHitInfo.strikeDirection = 'left'
-            else if (this.boardHitInfo.strikeDirection === 'bottom') this.boardHitInfo.strikeDirection = 'top'
-            else if (this.boardHitInfo.strikeDirection === 'left') this.boardHitInfo.strikeDirection = 'right'
+        if (!hitInfo.wasHit) {
+            this.boardHitInfo.strikeDirection = this.reverseDirections[direction]
             this.boardHitInfo.lastHitSquare = this.boardHitInfo.firstHitSquare
         }
-        this.updateAIState(newRow, newCol, result)
+        this.updateAIState(newRow, newCol, hitInfo)
+        return hitInfo
     }
 
     /**

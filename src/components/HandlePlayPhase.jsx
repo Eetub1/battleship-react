@@ -39,11 +39,12 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
             let hitInfo = null
             if (computerIntelligence === 'dumb') hitInfo = playerBoardObject.calculateRandomResponse()
             else hitInfo = playerBoardObject.calculateSmartResponse()
+            console.log(hitInfo)
             setHitMessage(hitInfo.message)
             setMessage(`Your turn, ${playerName}...`)
             setIsComputerTurn(false)
             checkIfGameOver()
-        }, (Math.random() + 1) * 1000) // random delay to make the computer seem more human 
+        }, (Math.random() + 1) * 100) // random delay to make the computer seem more human 
     }
 
     const handleComputerBoardClick = (rowIndex, cellIndex) => {
@@ -55,7 +56,7 @@ const HandlePlayPhase = ({ playerBoardObject, playerName, setGamePhase, boardSiz
         setIsComputerTurn(true)
         setTimeout(() => {
             computerMove()
-        }, 1000)
+        }, 100) // change to 1000 when not testing
     }
 
     return (
